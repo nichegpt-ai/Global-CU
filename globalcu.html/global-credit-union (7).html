@@ -1,0 +1,2623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0D2461">
+<title>Global Credit Union</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none;}
+:root{
+  --navy:#0D2461;--navy-dark:#071440;--navy-mid:#162D6F;
+  --gold:#F5A623;--gold-dark:#D4891A;
+  --white:#FFFFFF;--bg:#EEF2F9;
+  --gray:#8A94A6;--gray-light:#E2E8F4;--gray-mid:#C8D0E0;
+  --coral:#E8635A;--green:#22C55E;--yellow-warn:#F59E0B;
+  --text:#1A2744;--text-sub:#5A6580;
+  --font:'Outfit',sans-serif;
+  --radius:16px;--radius-sm:10px;--radius-lg:24px;
+  --shadow:0 8px 32px rgba(13,36,97,0.13);
+  --shadow-sm:0 2px 12px rgba(13,36,97,0.08);
+  --sat:env(safe-area-inset-top,0px);
+  --sab:env(safe-area-inset-bottom,0px);
+  --sal:env(safe-area-inset-left,0px);
+  --sar:env(safe-area-inset-right,0px);
+}
+html{
+  height:100%;
+  height:-webkit-fill-available;
+  overflow:hidden;
+  -webkit-text-size-adjust:100%;
+  text-size-adjust:100%;
+}
+body{
+  font-family:var(--font);
+  background:#101830;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height:100vh;
+  min-height:-webkit-fill-available;
+  overflow:hidden;
+  overscroll-behavior:none;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+/* Prevent 300ms tap delay on all interactive elements */
+a,button,input,select,textarea,
+.action-item,.bill-card,.qa-card,.card-tab,.nav-item,
+.trans-item,.info-card,.menu-item,.preset-btn,.crypto-btn,
+.dep-copy-btn,.copy-btn-inline,.pin-key,.link-text{
+  touch-action:manipulation;
+}
+.app{
+  width:390px;
+  height:844px;
+  position:relative;
+  overflow:hidden;
+  border-radius:40px;
+  box-shadow:0 50px 100px rgba(0,0,0,0.5);
+}
+@media(max-width:430px){
+  body{background:var(--navy-dark);align-items:flex-start;}
+  .app{
+    width:100vw;
+    width:calc(100vw - var(--sal) - var(--sar));
+    height:100vh;
+    height:100dvh;
+    height:-webkit-fill-available;
+    border-radius:0;
+    box-shadow:none;
+  }
+}
+.screen{
+  position:absolute;top:0;left:0;width:100%;height:100%;
+  overflow-y:auto;overflow-x:hidden;
+  display:none;background:var(--bg);
+  scrollbar-width:none;
+  -webkit-overflow-scrolling:touch;
+  overscroll-behavior-y:contain;
+}
+.screen::-webkit-scrollbar{display:none;}
+.screen.active{display:flex;flex-direction:column;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+@keyframes pulse{0%,100%{transform:scale(1);}50%{transform:scale(1.06);}}
+@keyframes spin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+@keyframes logoFloat{0%,100%{transform:translateY(0) scale(1);}50%{transform:translateY(-10px) scale(1.05);}}
+@keyframes popIn{0%{transform:scale(0.6);opacity:0;}80%{transform:scale(1.05);}100%{transform:scale(1);opacity:1;}}
+@keyframes bounce-dot{0%,100%{transform:scale(0.6);opacity:0.4;}50%{transform:scale(1);opacity:1;}}
+@keyframes rippleAnim{to{transform:scale(3);opacity:0;}}
+
+/* LOADING */
+#s-loading{background:var(--navy);align-items:center;justify-content:center;gap:24px;padding-top:var(--sat);}
+.loading-logo{animation:logoFloat 2.5s ease-in-out infinite;}
+.loading-logo .logo-box{width:96px;height:96px;background:var(--navy-dark);border-radius:22px;display:flex;align-items:center;justify-content:center;animation:pulse 2s ease-in-out infinite;}
+.loading-wordmark{color:var(--white);text-align:center;}
+.loading-wordmark .word-global{font-size:32px;font-weight:900;letter-spacing:4px;}
+.loading-wordmark .word-sub{font-size:13px;font-weight:400;letter-spacing:6px;color:rgba(255,255,255,0.6);margin-top:2px;}
+.loading-dots{display:flex;gap:8px;margin-top:12px;}
+.loading-dots span{width:8px;height:8px;background:var(--gold);border-radius:50%;animation:bounce-dot 1.2s ease-in-out infinite;}
+.loading-dots span:nth-child(2){animation-delay:0.2s;}
+.loading-dots span:nth-child(3){animation-delay:0.4s;}
+
+/* WELCOME */
+#s-welcome{background:var(--navy);align-items:center;justify-content:space-between;padding:calc(60px + var(--sat)) 28px calc(40px + var(--sab));}
+.welcome-bg{position:absolute;inset:0;overflow:hidden;pointer-events:none;}
+.welcome-bg .blob{position:absolute;border-radius:50%;background:rgba(255,255,255,0.04);}
+.welcome-bg .blob1{width:300px;height:300px;top:-80px;right:-60px;}
+.welcome-bg .blob2{width:250px;height:250px;bottom:120px;left:-80px;}
+.welcome-bg .blob3{width:180px;height:180px;top:200px;right:-40px;background:rgba(245,166,35,0.05);}
+.welcome-center{display:flex;flex-direction:column;align-items:center;gap:20px;z-index:1;animation:fadeUp 0.8s ease forwards;}
+.welcome-logo-box{width:88px;height:88px;background:var(--navy-dark);border-radius:20px;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 32px rgba(0,0,0,0.3);animation:logoFloat 3s ease-in-out infinite;}
+.welcome-wordmark{text-align:center;}
+.welcome-wordmark .w-global{font-size:34px;font-weight:900;color:var(--white);letter-spacing:3px;display:flex;align-items:center;gap:4px;justify-content:center;}
+.welcome-wordmark .w-arrow-inline{color:var(--gold);}
+.welcome-wordmark .w-sub{font-size:13px;font-weight:500;color:rgba(255,255,255,0.55);letter-spacing:5px;margin-top:2px;}
+.welcome-tagline{font-size:15px;color:rgba(255,255,255,0.65);text-align:center;line-height:1.6;max-width:260px;}
+.welcome-actions{display:flex;flex-direction:column;gap:14px;width:100%;z-index:1;animation:fadeUp 1s 0.2s ease both;}
+.welcome-footer{font-size:11px;color:rgba(255,255,255,0.35);text-align:center;line-height:1.6;z-index:1;}
+
+/* BUTTONS */
+.btn-gold{background:var(--gold);color:var(--navy-dark);border:none;width:100%;padding:17px;border-radius:14px;font-family:var(--font);font-size:16px;font-weight:700;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 8px 24px rgba(245,166,35,0.35);-webkit-appearance:none;appearance:none;}
+.btn-gold:hover{background:var(--gold-dark);transform:translateY(-2px);}
+.btn-gold:active{transform:translateY(0);}
+.btn-outline-white{background:rgba(255,255,255,0.1);color:var(--white);border:1.5px solid rgba(255,255,255,0.25);width:100%;padding:16px;border-radius:14px;font-family:var(--font);font-size:16px;font-weight:600;cursor:pointer;transition:all 0.2s;backdrop-filter:blur(10px);-webkit-appearance:none;appearance:none;}
+.btn-outline-white:hover{background:rgba(255,255,255,0.18);transform:translateY(-2px);}
+.btn-navy{background:var(--navy);color:var(--white);border:none;width:100%;padding:16px;border-radius:14px;font-family:var(--font);font-size:16px;font-weight:700;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:10px;margin-top:8px;-webkit-appearance:none;appearance:none;}
+.btn-navy:hover{background:var(--navy-mid);transform:translateY(-2px);box-shadow:0 8px 20px rgba(13,36,97,0.25);}
+.btn-navy:active{transform:translateY(0);}
+.btn-outline-navy{background:var(--white);color:var(--navy);border:2px solid var(--navy);width:100%;padding:15px;border-radius:14px;font-family:var(--font);font-size:16px;font-weight:700;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:10px;-webkit-appearance:none;appearance:none;}
+.btn-outline-navy:hover{background:var(--gray-light);}
+.btn-coral{background:var(--coral);color:var(--white);border:none;width:100%;padding:16px;border-radius:14px;font-family:var(--font);font-size:16px;font-weight:700;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:10px;-webkit-appearance:none;appearance:none;}
+.btn-coral:hover{background:#d4574e;transform:translateY(-2px);}
+.btn-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px;}
+
+/* HEADER */
+.app-header{background:var(--navy);padding:calc(52px + var(--sat)) 20px 20px;display:flex;flex-direction:column;flex-shrink:0;}
+.header-row{display:flex;align-items:center;gap:12px;}
+.btn-back{background:rgba(255,255,255,0.12);border:none;width:36px;height:36px;border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:white;transition:all 0.2s;flex-shrink:0;}
+.btn-back:hover{background:rgba(255,255,255,0.2);}
+.header-logo-sm{width:32px;height:32px;background:var(--navy-dark);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.header-title{flex:1;color:var(--white);font-size:17px;font-weight:700;text-align:center;}
+.header-right-space{width:36px;flex-shrink:0;}
+.header-sub{color:rgba(255,255,255,0.55);font-size:13px;font-weight:400;margin-top:2px;text-align:center;}
+.progress-bar{display:flex;gap:0;margin-top:16px;border-radius:8px;overflow:hidden;}
+.prog-step{flex:1;height:4px;background:rgba(255,255,255,0.15);transition:background 0.3s;}
+.prog-step.active{background:var(--gold);}
+.prog-step.done{background:rgba(255,255,255,0.45);}
+.prog-labels{display:flex;margin-top:8px;}
+.prog-label{flex:1;text-align:center;font-size:10px;font-weight:600;color:rgba(255,255,255,0.35);letter-spacing:0.5px;text-transform:uppercase;}
+.prog-label.active{color:var(--gold);}
+.prog-label.done{color:rgba(255,255,255,0.6);}
+
+/* FORMS */
+.form-body{flex:1;background:var(--white);border-radius:var(--radius-lg) var(--radius-lg) 0 0;padding:24px 20px 32px;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;}
+.form-body::-webkit-scrollbar{display:none;}
+.form-group{margin-bottom:18px;}
+.form-label{font-size:12px;font-weight:700;color:var(--navy);letter-spacing:0.5px;margin-bottom:6px;display:block;}
+.form-label .req{color:var(--coral);margin-left:2px;}
+.form-input{width:100%;background:var(--gray-light);border:1.5px solid transparent;border-radius:12px;padding:13px 16px;font-family:var(--font);font-size:16px;color:var(--text);outline:none;transition:all 0.2s;-webkit-appearance:none;appearance:none;}
+.form-input::placeholder{color:var(--gray);}
+.form-input:focus{border-color:var(--navy);background:var(--white);box-shadow:0 0 0 3px rgba(13,36,97,0.08);}
+.form-input.has-icon{padding-right:46px;}
+.form-input.error{border-color:var(--coral);background:var(--white);}
+.input-wrap{position:relative;}
+.input-icon{position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--gray);cursor:pointer;transition:color 0.2s;touch-action:manipulation;}
+.input-icon:hover{color:var(--navy);}
+.form-select{width:100%;background:var(--gray-light);border:1.5px solid transparent;border-radius:12px;padding:13px 40px 13px 16px;font-family:var(--font);font-size:16px;color:var(--text);outline:none;cursor:pointer;-webkit-appearance:none;appearance:none;transition:all 0.2s;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%238A94A6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;}
+.form-select:focus{border-color:var(--navy);background-color:var(--white);}
+.section-divider{height:1px;background:var(--gray-light);margin:20px 0;}
+
+/* SIGNIN */
+#s-signin{background:var(--white);}
+.signin-inner{flex:1;display:flex;flex-direction:column;align-items:center;padding:calc(60px + var(--sat)) 28px calc(40px + var(--sab));overflow-y:auto;-webkit-overflow-scrolling:touch;}
+.signin-logo{width:72px;height:72px;background:var(--navy);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 24px;animation:popIn 0.6s ease forwards;}
+.signin-title{font-size:24px;font-weight:800;color:var(--navy);text-align:center;margin-bottom:6px;}
+.signin-sub{font-size:14px;color:var(--gray);text-align:center;margin-bottom:28px;}
+.btn-google{width:100%;padding:14px;border-radius:12px;border:1.5px solid var(--gray-mid);background:var(--white);font-family:var(--font);font-size:15px;font-weight:600;color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:all 0.2s;margin-bottom:20px;}
+.btn-google:hover{background:var(--bg);}
+.or-divider{display:flex;align-items:center;gap:12px;margin-bottom:20px;width:100%;}
+.or-divider span{color:var(--gray);font-size:13px;font-weight:500;white-space:nowrap;}
+.or-divider::before,.or-divider::after{content:'';flex:1;height:1px;background:var(--gray-mid);}
+.signin-form{width:100%;display:flex;flex-direction:column;gap:14px;}
+.signin-links{display:flex;flex-direction:column;align-items:center;gap:10px;margin-top:20px;width:100%;}
+.link-text{font-size:14px;color:var(--gray);cursor:pointer;text-align:center;}
+.link-text span{color:var(--navy);font-weight:700;}
+.link-text span:hover{text-decoration:underline;}
+.err-msg{font-size:12px;color:var(--coral);font-weight:600;padding:10px 14px;background:#FEF0EE;border-radius:10px;display:none;margin-top:-8px;}
+.err-msg.show{display:block;}
+
+/* HOME */
+#s-home{background:var(--bg);}
+.home-header{background:var(--navy);padding:calc(52px + var(--sat)) 20px 24px;flex-shrink:0;}
+.home-header-row{display:flex;align-items:center;justify-content:space-between;}
+.home-greeting{color:rgba(255,255,255,0.65);font-size:13px;font-weight:400;}
+.home-username{color:var(--white);font-size:18px;font-weight:800;margin-top:2px;}
+.home-header-right{display:flex;gap:10px;}
+.icon-btn{width:38px;height:38px;background:rgba(255,255,255,0.12);border:none;border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:white;transition:all 0.2s;position:relative;}
+.icon-btn:hover{background:rgba(255,255,255,0.2);}
+.notif-dot{position:absolute;top:7px;right:7px;width:8px;height:8px;background:var(--gold);border-radius:50%;border:2px solid var(--navy);}
+.account-card{background:linear-gradient(135deg,#0D2461 0%,#1B3E8C 60%,#0D2461 100%);border-radius:22px;margin:16px 0 0 0;padding:22px;position:relative;overflow:hidden;box-shadow:0 12px 40px rgba(13,36,97,0.3);}
+.account-card::before{content:'';position:absolute;top:-30px;right:-30px;width:160px;height:160px;background:rgba(255,255,255,0.04);border-radius:50%;}
+.account-card::after{content:'';position:absolute;bottom:-40px;left:-20px;width:120px;height:120px;background:rgba(245,166,35,0.06);border-radius:50%;}
+.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.card-badge{display:flex;align-items:center;gap:6px;background:rgba(34,197,94,0.15);border-radius:20px;padding:4px 12px;}
+.card-badge .dot{width:7px;height:7px;background:var(--green);border-radius:50%;animation:pulse 2s infinite;}
+.card-badge span{color:var(--green);font-size:12px;font-weight:600;}
+.card-label{color:rgba(255,255,255,0.55);font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;}
+.card-balance{display:flex;align-items:center;gap:12px;}
+.card-balance-amount{color:var(--white);font-size:28px;font-weight:800;letter-spacing:-0.5px;}
+.card-eye{background:none;border:none;color:rgba(255,255,255,0.5);cursor:pointer;font-size:16px;}
+.card-eye:hover{color:var(--white);}
+.card-acct-row{display:flex;align-items:center;gap:8px;margin-top:10px;}
+.card-acct-num{color:rgba(255,255,255,0.55);font-size:13px;font-weight:500;letter-spacing:1px;}
+.card-copy{background:rgba(255,255,255,0.12);border:none;color:rgba(255,255,255,0.7);cursor:pointer;font-size:12px;font-weight:600;padding:3px 8px;border-radius:6px;transition:all 0.2s;}
+.card-copy:hover{background:rgba(255,255,255,0.22);color:var(--white);}
+.card-tabs{display:flex;gap:8px;margin-top:12px;}
+.card-tab{padding:5px 14px;border-radius:8px;border:1.5px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.55);font-size:12px;font-weight:600;cursor:pointer;transition:all 0.2s;user-select:none;}
+.card-tab:hover{border-color:rgba(255,255,255,0.45);color:rgba(255,255,255,0.8);background:rgba(255,255,255,0.07);}
+.card-tab.active{background:rgba(255,255,255,0.15);border-color:rgba(255,255,255,0.4);color:var(--white);}
+.home-body{padding:20px;flex:1;}
+.section-title{font-size:16px;font-weight:800;color:var(--navy);margin-bottom:14px;}
+.section-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.view-all{font-size:13px;color:var(--navy);font-weight:600;cursor:pointer;opacity:0.7;}
+.view-all:hover{opacity:1;text-decoration:underline;}
+.actions-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+.action-item{display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;transition:transform 0.2s;}
+.action-item:hover{transform:translateY(-3px);}
+.action-icon{width:54px;height:54px;border-radius:15px;display:flex;align-items:center;justify-content:center;font-size:22px;transition:all 0.2s;}
+.action-label{font-size:11px;font-weight:600;color:var(--text-sub);text-align:center;}
+.action-mint{background:#E8FBF4;}.action-coral{background:#FEF0EE;}.action-blue{background:#EEF4FF;}.action-purple{background:#F3EEFF;}
+.action-yellow{background:#FFFBEA;}.action-sky{background:#EAF6FF;}.action-teal{background:#E8FAFB;}.action-pink{background:#FFF0F5;}
+
+/* TRANSACTIONS */
+.trans-empty{background:var(--white);border-radius:var(--radius);padding:32px 20px;text-align:center;box-shadow:var(--shadow-sm);}
+.trans-empty-icon{font-size:36px;margin-bottom:10px;opacity:0.5;}
+.trans-empty p{font-size:14px;color:var(--gray);margin-bottom:4px;}
+.trans-empty small{font-size:12px;color:var(--gray);opacity:0.6;}
+.trans-item{background:var(--white);border-radius:var(--radius);padding:14px 16px;display:flex;align-items:center;gap:12px;margin-bottom:10px;box-shadow:var(--shadow-sm);transition:all 0.2s;cursor:pointer;}
+.trans-item:hover{transform:translateX(3px);box-shadow:var(--shadow);}
+.trans-icon{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.trans-info{flex:1;min-width:0;}
+.trans-name{font-size:14px;font-weight:700;color:var(--text);}
+.trans-sub{font-size:11px;color:var(--gray);margin-top:1px;}
+.trans-date{font-size:11px;color:var(--gray);margin-top:2px;}
+.trans-amount-pos{font-size:15px;font-weight:800;color:var(--green);white-space:nowrap;}
+.trans-amount-neg{font-size:15px;font-weight:800;color:var(--coral);white-space:nowrap;}
+
+/* BOTTOM NAV */
+.bottom-nav{background:var(--white);display:flex;padding:10px 8px calc(22px + var(--sab));border-top:1px solid var(--gray-light);flex-shrink:0;box-shadow:0 -4px 20px rgba(13,36,97,0.07);}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:6px 4px;border-radius:10px;transition:all 0.2s;}
+.nav-item:hover{background:var(--gray-light);}
+.nav-label{font-size:10px;font-weight:600;color:var(--gray);}
+.nav-item.active .nav-label{color:var(--navy);font-weight:700;}
+.nav-active-pill{width:30px;height:3px;background:var(--navy);border-radius:2px;margin-top:2px;}
+
+/* ALERTS */
+.alert-box{border-radius:12px;padding:14px 16px;margin-bottom:16px;display:flex;gap:12px;align-items:flex-start;}
+.alert-warn{background:#FFFBEA;border:1px solid #F59E0B30;}
+.alert-box-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
+.alert-box-title{font-size:14px;font-weight:700;color:#92400E;margin-bottom:4px;}
+.alert-box-sub{font-size:13px;color:#78350F;line-height:1.5;}
+.alert-link{color:var(--navy);font-weight:700;text-decoration:underline;cursor:pointer;}
+
+/* AMOUNT PRESETS */
+.amount-presets{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;}
+.preset-btn{padding:8px 16px;background:var(--gray-light);border:1.5px solid transparent;border-radius:9px;font-family:var(--font);font-size:14px;font-weight:600;color:var(--text);cursor:pointer;transition:all 0.2s;}
+.preset-btn:hover,.preset-btn.active{background:var(--navy);color:var(--white);}
+
+/* AVAIL BALANCE BOX */
+.avail-box{background:#EEF4FF;border-radius:10px;padding:10px 14px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;}
+.avail-box-label{font-size:12px;color:var(--text-sub);font-weight:500;}
+.avail-box-amount{font-size:16px;font-weight:800;color:var(--navy);}
+
+/* DEPOSIT ACCOUNT DETAILS */
+.dep-acct-details{background:linear-gradient(135deg,#f0f4ff 0%,#e8eeff 100%);border:1.5px solid #c5d0f0;border-radius:14px;padding:16px;margin-bottom:16px;}
+.dep-acct-details-title{font-size:11px;font-weight:800;color:var(--navy);letter-spacing:1px;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:6px;}
+.dep-detail-row{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid rgba(13,36,97,0.08);}
+.dep-detail-row:last-child{border-bottom:none;padding-bottom:0;}
+.dep-detail-left{flex:1;min-width:0;}
+.dep-detail-label{font-size:10px;font-weight:700;color:var(--gray);letter-spacing:0.8px;text-transform:uppercase;margin-bottom:2px;}
+.dep-detail-value{font-size:14px;font-weight:700;color:var(--navy);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:0.3px;}
+.dep-detail-value.acct-num{font-size:15px;font-weight:800;letter-spacing:1.5px;font-variant-numeric:tabular-nums;}
+.dep-copy-btn{background:var(--navy);border:none;border-radius:8px;padding:6px 12px;font-family:var(--font);font-size:11px;font-weight:700;color:var(--white);cursor:pointer;transition:all 0.2s;white-space:nowrap;flex-shrink:0;margin-left:10px;}
+.dep-copy-btn:hover{background:var(--navy-mid);transform:scale(1.04);}
+.dep-copy-btn:active{transform:scale(0.97);}
+
+/* CRYPTO NETWORK */
+.crypto-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px;}
+.crypto-btn{padding:10px 8px;background:var(--gray-light);border:2px solid transparent;border-radius:10px;font-family:var(--font);font-size:13px;font-weight:700;color:var(--text);cursor:pointer;transition:all 0.2s;text-align:center;display:flex;flex-direction:column;align-items:center;gap:4px;}
+.crypto-btn:hover{border-color:var(--navy);}
+.crypto-btn.active{background:#EEF4FF;border-color:var(--navy);color:var(--navy);}
+.crypto-btn .c-icon{font-size:18px;}
+.crypto-btn .c-name{font-size:11px;font-weight:600;}
+
+/* BILLS */
+.bills-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;}
+.bill-card{background:var(--white);border-radius:var(--radius);padding:20px 16px;display:flex;flex-direction:column;align-items:center;gap:10px;cursor:pointer;transition:all 0.2s;box-shadow:var(--shadow-sm);text-align:center;}
+.bill-card:hover{transform:translateY(-4px);box-shadow:var(--shadow);}
+.bill-icon{width:52px;height:52px;background:#EEF4FF;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;transition:transform 0.2s;}
+.bill-card:hover .bill-icon{transform:scale(1.1);}
+.bill-name{font-size:13px;font-weight:700;color:var(--navy);}
+
+/* SEARCH */
+.search-filter-row{display:flex;gap:10px;margin-bottom:16px;}
+.search-wrap{flex:1;position:relative;}
+.search-input{width:100%;background:var(--white);border:1.5px solid var(--gray-mid);border-radius:12px;padding:11px 14px 11px 40px;font-family:var(--font);font-size:14px;color:var(--text);outline:none;transition:border-color 0.2s;}
+.search-input:focus{border-color:var(--navy);}
+.search-icon{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--gray);}
+.filter-select{width:130px;background:var(--white);border:1.5px solid var(--gray-mid);border-radius:12px;padding:11px 32px 11px 12px;font-family:var(--font);font-size:14px;color:var(--text);outline:none;cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%238A94A6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;flex-shrink:0;}
+
+/* VCARD */
+.vcard{background:linear-gradient(135deg,#0D2461,#1B3E8C);border-radius:20px;padding:22px 24px;color:var(--white);margin-bottom:16px;position:relative;overflow:hidden;box-shadow:0 12px 40px rgba(13,36,97,0.3);}
+.vcard::before{content:'';position:absolute;top:-30px;right:-30px;width:140px;height:140px;border-radius:50%;background:rgba(255,255,255,0.06);}
+.vcard::after{content:'';position:absolute;bottom:-20px;left:-20px;width:100px;height:100px;border-radius:50%;background:rgba(245,166,35,0.08);}
+.vcard-type{font-size:11px;font-weight:700;letter-spacing:2px;opacity:0.6;margin-bottom:16px;}
+.vcard-num{font-size:17px;font-weight:700;letter-spacing:3px;margin-bottom:16px;}
+.vcard-footer{display:flex;justify-content:space-between;align-items:flex-end;}
+.vcard-label{font-size:10px;opacity:0.5;letter-spacing:1px;}
+.vcard-value{font-size:14px;font-weight:700;margin-top:2px;}
+.card-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px;}
+.card-action-btn{background:var(--white);border:1.5px solid var(--gray-mid);border-radius:12px;padding:12px 8px;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;transition:all 0.2s;}
+.card-action-btn:hover{border-color:var(--navy);transform:translateY(-2px);}
+.card-action-btn.freeze-btn{border-color:var(--coral);}
+.card-action-btn.freeze-btn:hover{background:var(--coral);color:var(--white);}
+.card-action-label{font-size:12px;font-weight:700;color:var(--navy);}
+.freeze-btn .card-action-label{color:var(--coral);}
+.freeze-btn:hover .card-action-label{color:var(--white);}
+.card-details-card{background:var(--white);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow-sm);}
+.card-detail-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--gray-light);}
+.card-detail-row:last-child{border-bottom:none;}
+.card-detail-label{font-size:12px;font-weight:700;color:var(--gray);letter-spacing:0.5px;}
+.card-detail-value{font-size:14px;font-weight:700;color:var(--navy);}
+
+/* VERIFY UPLOAD STATUS */
+.vdoc-status{font-size:11px;font-weight:700;color:var(--green);margin-top:4px;display:flex;align-items:center;gap:4px;}
+.btn-upload.uploaded{background:var(--navy);color:var(--white);border-color:var(--navy);}
+.verify-card.doc-uploaded{border:1.5px solid rgba(34,197,94,0.35);background:rgba(34,197,94,0.04);}background:var(--gray-light);border-radius:12px;padding:14px 16px;display:flex;gap:12px;align-items:center;margin-bottom:16px;}
+.not-verified-badge{background:var(--coral);color:var(--white);font-size:10px;font-weight:800;padding:3px 9px;border-radius:20px;letter-spacing:0.5px;flex-shrink:0;}
+.not-verified-text{font-size:13px;color:var(--text-sub);}
+.verify-card{background:var(--white);border-radius:var(--radius);padding:18px;display:flex;align-items:center;gap:14px;margin-bottom:12px;box-shadow:var(--shadow-sm);}
+.verify-icon{width:48px;height:48px;background:#EEF4FF;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.verify-info{flex:1;}
+.verify-name{font-size:14px;font-weight:700;color:var(--navy);}
+.verify-sub{font-size:12px;color:var(--gray);margin-top:2px;}
+.btn-upload{background:var(--white);border:2px solid var(--navy);border-radius:10px;padding:8px 16px;font-family:var(--font);font-size:13px;font-weight:700;color:var(--navy);cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:6px;flex-shrink:0;-webkit-appearance:none;appearance:none;}
+.btn-upload:hover{background:var(--navy);color:var(--white);}
+
+/* PROFILE */
+.profile-header{background:var(--navy);padding:calc(52px + var(--sat)) 20px 28px;flex-shrink:0;}
+.profile-photo{width:84px;height:84px;border-radius:50%;border:3px solid var(--gold);box-shadow:0 0 0 3px rgba(245,166,35,0.2);overflow:hidden;position:relative;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--gold),var(--gold-dark));font-size:28px;font-weight:800;color:var(--navy);cursor:pointer;}
+.profile-photo img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0;}
+.profile-photo-edit{position:absolute;bottom:2px;right:2px;width:26px;height:26px;background:var(--navy);border:2.5px solid var(--white);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,0.25);transition:background 0.2s;}
+.profile-photo-edit:hover{background:var(--navy-mid);}
+.profile-photo-edit svg{display:block;}
+.profile-name{font-size:18px;font-weight:800;color:var(--white);text-align:center;margin-top:8px;}
+.profile-acct{font-size:13px;color:rgba(255,255,255,0.5);text-align:center;}
+.profile-body{padding:20px;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;}
+.info-card{background:var(--white);border-radius:var(--radius);padding:16px;margin-bottom:14px;box-shadow:var(--shadow-sm);transition:all 0.2s;}
+.info-card.clickable{cursor:pointer;}
+.info-card.clickable:hover{transform:translateY(-2px);box-shadow:var(--shadow);}
+.info-card-inner{display:flex;align-items:center;gap:12px;}
+.info-card-icon{width:42px;height:42px;background:#EEF4FF;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.info-card-content{flex:1;min-width:0;}
+.info-card-label{font-size:10px;font-weight:700;color:var(--gray);letter-spacing:1px;text-transform:uppercase;}
+.info-card-value{font-size:14px;font-weight:700;color:var(--navy);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.info-card-acct{font-size:13px;font-weight:700;color:var(--navy);margin-top:2px;letter-spacing:1.5px;font-variant-numeric:tabular-nums;}
+.copy-btn-inline{background:var(--gray-light);border:none;border-radius:7px;padding:5px 10px;font-family:var(--font);font-size:12px;font-weight:700;color:var(--navy);cursor:pointer;transition:all 0.2s;flex-shrink:0;}
+.copy-btn-inline:hover{background:var(--navy);color:var(--white);}
+.menu-item{background:var(--white);border-radius:var(--radius);padding:16px;display:flex;align-items:center;gap:12px;margin-bottom:10px;cursor:pointer;transition:all 0.2s;box-shadow:var(--shadow-sm);}
+.menu-item:hover{transform:translateX(4px);box-shadow:var(--shadow);}
+.menu-item-icon{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.menu-item-label{flex:1;font-size:15px;font-weight:700;color:var(--navy);}
+.menu-item.signout .menu-item-label{color:var(--coral);}
+.menu-item.signout:hover{background:#FEF0EE;}
+
+/* REVIEW */
+.review-card{background:var(--white);border-radius:var(--radius-lg);margin:0 0 16px 0;padding:20px;box-shadow:var(--shadow);}
+.review-section{margin-bottom:18px;padding-bottom:18px;border-bottom:1px solid var(--gray-light);}
+.review-section:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0;}
+.review-section-title{font-size:12px;font-weight:700;color:var(--gray);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px;}
+.review-field{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.review-field-label{font-size:12px;font-weight:700;color:var(--text-sub);}
+.review-field-value{font-size:14px;font-weight:700;color:var(--navy);text-align:right;max-width:60%;}
+.review-photo-preview{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-dark));display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;color:var(--navy);border:2px solid var(--gold);overflow:hidden;flex-shrink:0;}
+.review-photo-preview img{width:100%;height:100%;object-fit:cover;}
+.terms-row{display:flex;align-items:flex-start;gap:12px;padding:16px 0;}
+.checkbox{width:24px;height:24px;border:2px solid var(--gray-mid);border-radius:6px;flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s;}
+.checkbox.checked{background:var(--navy);border-color:var(--navy);}
+.terms-text{font-size:12px;color:var(--gray);line-height:1.7;}
+.terms-link{color:var(--navy);font-weight:700;text-decoration:underline;cursor:pointer;}
+
+/* STATEMENT */
+.summary-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px;}
+.summary-card{background:var(--white);border-radius:var(--radius-sm);padding:12px;box-shadow:var(--shadow-sm);text-align:center;}
+.summary-label{font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;}
+.summary-value{font-size:15px;font-weight:800;color:var(--navy);}
+
+/* RESET */
+.reset-card{background:var(--white);border-radius:var(--radius-lg);margin:0;padding:28px 24px;box-shadow:var(--shadow);flex:1;}
+.reset-icon-circle{width:64px;height:64px;background:#FEE2E2;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:28px;}
+.reset-card-title{font-size:18px;font-weight:800;color:var(--navy);text-align:center;margin-bottom:8px;}
+.reset-card-sub{font-size:14px;color:var(--gray);text-align:center;line-height:1.6;margin-bottom:22px;}
+
+/* PHOTO UPLOAD */
+.photo-upload-area{width:140px;height:140px;border:2.5px dashed var(--gray-mid);border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;cursor:pointer;transition:all 0.2s;margin:24px auto;background:var(--gray-light);overflow:hidden;position:relative;}
+.photo-upload-area:hover{border-color:var(--navy);background:var(--gray-mid);}
+.photo-upload-area.has-photo{border-style:solid;border-color:var(--navy);}
+
+/* QA */
+.qa-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;}
+.qa-card{background:var(--white);border-radius:var(--radius);padding:20px;display:flex;flex-direction:column;align-items:flex-start;gap:12px;cursor:pointer;transition:all 0.25s;box-shadow:var(--shadow-sm);}
+.qa-card:hover{transform:translateY(-4px);box-shadow:var(--shadow);}
+.qa-icon{width:50px;height:50px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;}
+.qa-label{font-size:14px;font-weight:800;color:var(--navy);}
+.qa-sub{font-size:11px;color:var(--gray);margin-top:2px;}
+
+/* MISC */
+.pin-dots{display:flex;gap:12px;justify-content:center;margin-top:10px;}
+.pin-dot{width:14px;height:14px;border-radius:50%;border:2px solid var(--gray-mid);transition:all 0.2s;}
+.pin-dot.filled{background:var(--navy);border-color:var(--navy);}
+.screen-scroll{flex:1;overflow-y:auto;padding:20px;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;}
+.screen-scroll::-webkit-scrollbar{display:none;}
+.toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:var(--navy);color:var(--white);padding:12px 22px;border-radius:30px;font-size:13px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,0.2);z-index:9999;opacity:0;transition:opacity 0.3s;pointer-events:none;white-space:nowrap;max-width:300px;text-align:center;}
+.toast.show{opacity:1;}
+.loading-overlay{position:absolute;inset:0;background:var(--navy);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;transition:opacity 0.5s;gap:20px;}
+.loading-overlay.hide{opacity:0;pointer-events:none;}
+.spinner{width:48px;height:48px;border:3px solid rgba(245,166,35,0.2);border-top-color:var(--gold);border-radius:50%;animation:spin 0.8s linear infinite;}
+.ep-photo-section{display:flex;align-items:center;gap:14px;padding:16px;background:var(--white);border-radius:var(--radius);margin-bottom:16px;box-shadow:var(--shadow-sm);}
+.ep-photo-circle{width:70px;height:70px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-dark));display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800;color:var(--navy);overflow:hidden;flex-shrink:0;border:2px solid var(--gold);cursor:pointer;position:relative;}
+.ep-photo-circle img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0;border-radius:50%;}
+.ep-photo-circle:hover .ep-cam-overlay{opacity:1;}
+.ep-cam-overlay{position:absolute;inset:0;background:rgba(0,0,0,0.42);border-radius:50%;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity 0.2s;}
+.pin-field-note{font-size:12px;color:var(--gray);margin-top:8px;line-height:1.5;}
+.account-type-acct-box{background:rgba(255,255,255,0.08);border-radius:10px;padding:10px 14px;margin-top:8px;}
+.account-type-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;}
+.account-type-row:last-child{margin-bottom:0;}
+.account-type-label{font-size:11px;color:rgba(255,255,255,0.5);font-weight:500;}
+/* PIN LOCK OVERLAY */
+#pin-lock-overlay{
+  position:absolute;inset:0;z-index:9990;
+  background:var(--navy);
+  display:none;flex-direction:column;align-items:center;justify-content:center;
+  gap:0;
+  padding-top:var(--sat);
+  padding-bottom:var(--sab);
+}
+#pin-lock-overlay.visible{display:flex;}
+.pin-lock-logo{margin-bottom:28px;animation:logoFloat 3s ease-in-out infinite;}
+.pin-lock-logo .logo-box-sm{width:72px;height:72px;background:var(--navy-dark);border-radius:18px;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 28px rgba(0,0,0,0.3);}
+.pin-lock-title{font-size:20px;font-weight:800;color:var(--white);margin-bottom:6px;text-align:center;}
+.pin-lock-sub{font-size:13px;color:rgba(255,255,255,0.5);margin-bottom:32px;text-align:center;}
+.pin-lock-dots{display:flex;gap:16px;justify-content:center;margin-bottom:32px;}
+.pin-lock-dot{width:16px;height:16px;border-radius:50%;border:2.5px solid rgba(255,255,255,0.3);background:transparent;transition:all 0.18s;}
+.pin-lock-dot.filled{background:var(--gold);border-color:var(--gold);transform:scale(1.1);}
+.pin-lock-err{font-size:13px;font-weight:700;color:var(--coral);min-height:20px;text-align:center;margin-bottom:12px;opacity:0;transition:opacity 0.2s;}
+.pin-lock-err.show{opacity:1;}
+@keyframes pinShake{0%,100%{transform:translateX(0);}20%{transform:translateX(-8px);}40%{transform:translateX(8px);}60%{transform:translateX(-6px);}80%{transform:translateX(6px);}}
+.pin-lock-dots.shake{animation:pinShake 0.4s ease;}
+.pin-keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;width:260px;}
+.pin-key{height:62px;background:rgba(255,255,255,0.08);border:1.5px solid rgba(255,255,255,0.1);border-radius:14px;font-family:var(--font);font-size:22px;font-weight:700;color:var(--white);cursor:pointer;transition:all 0.15s;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;user-select:none;}
+.pin-key:hover{background:rgba(255,255,255,0.15);border-color:rgba(255,255,255,0.25);}
+.pin-key:active{transform:scale(0.93);background:rgba(255,255,255,0.22);}
+.pin-key .key-sub{font-size:8px;font-weight:600;letter-spacing:1.5px;color:rgba(255,255,255,0.35);text-transform:uppercase;}
+.pin-key-del{background:transparent;border-color:transparent;}
+.pin-key-del:hover{background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.12);}
+.pin-lock-footer{margin-top:28px;display:flex;flex-direction:column;align-items:center;gap:10px;}
+.pin-lock-signout{font-size:13px;color:rgba(255,255,255,0.35);cursor:pointer;text-decoration:underline;transition:color 0.2s;}
+.pin-lock-signout:hover{color:var(--coral);}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+
+<div class="toast" id="toast"></div>
+
+<!-- ======================================================
+     PIN LOCK OVERLAY
+====================================================== -->
+<div id="pin-lock-overlay">
+  <div class="pin-lock-logo">
+    <div class="logo-box-sm">
+      <svg width="36" height="36" viewBox="0 0 50 50" fill="none">
+        <polygon points="25,7 37,35 25,27 13,35" fill="#F5A623"/>
+        <polygon points="25,27 13,35 19,35" fill="#D4891A" opacity="0.55"/>
+        <polygon points="25,27 37,35 31,35" fill="#D4891A" opacity="0.55"/>
+      </svg>
+    </div>
+  </div>
+  <div class="pin-lock-title">Enter your PIN</div>
+  <div class="pin-lock-sub" id="pin-lock-sub">Welcome back. Verify to continue.</div>
+  <div class="pin-lock-dots" id="pin-lock-dots">
+    <div class="pin-lock-dot" id="pld0"></div>
+    <div class="pin-lock-dot" id="pld1"></div>
+    <div class="pin-lock-dot" id="pld2"></div>
+    <div class="pin-lock-dot" id="pld3"></div>
+  </div>
+  <div class="pin-lock-err" id="pin-lock-err">Incorrect PIN. Please try again.</div>
+  <div class="pin-keypad">
+    <button class="pin-key" onclick="pinKeyPress('1')"><span>1</span></button>
+    <button class="pin-key" onclick="pinKeyPress('2')"><span>2</span><span class="key-sub">ABC</span></button>
+    <button class="pin-key" onclick="pinKeyPress('3')"><span>3</span><span class="key-sub">DEF</span></button>
+    <button class="pin-key" onclick="pinKeyPress('4')"><span>4</span><span class="key-sub">GHI</span></button>
+    <button class="pin-key" onclick="pinKeyPress('5')"><span>5</span><span class="key-sub">JKL</span></button>
+    <button class="pin-key" onclick="pinKeyPress('6')"><span>6</span><span class="key-sub">MNO</span></button>
+    <button class="pin-key" onclick="pinKeyPress('7')"><span>7</span><span class="key-sub">PQRS</span></button>
+    <button class="pin-key" onclick="pinKeyPress('8')"><span>8</span><span class="key-sub">TUV</span></button>
+    <button class="pin-key" onclick="pinKeyPress('9')"><span>9</span><span class="key-sub">WXYZ</span></button>
+    <button class="pin-key" style="visibility:hidden;"></button>
+    <button class="pin-key" onclick="pinKeyPress('0')"><span>0</span></button>
+    <button class="pin-key pin-key-del" onclick="pinKeyDelete()">
+      <svg width="22" height="22" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"/><line x1="18" y1="9" x2="12" y2="15"/><line x1="12" y1="9" x2="18" y2="15"/></svg>
+    </button>
+  </div>
+  <div class="pin-lock-footer">
+    <div class="pin-lock-signout" onclick="pinLockSignOut()">Sign out instead</div>
+  </div>
+</div>
+
+<!-- ======================================================
+     LOADING
+====================================================== -->
+<div class="screen active" id="s-loading">
+  <div class="loading-logo">
+    <div class="logo-box">
+      <svg width="52" height="52" viewBox="0 0 52 52" fill="none">
+        <polygon points="26,8 38,36 26,28 14,36" fill="#F5A623"/>
+        <polygon points="26,28 14,36 20,36" fill="#D4891A" opacity="0.6"/>
+        <polygon points="26,28 38,36 32,36" fill="#D4891A" opacity="0.6"/>
+      </svg>
+    </div>
+  </div>
+  <div class="loading-wordmark">
+    <div class="word-global">GLOBAL</div>
+    <div class="word-sub">CREDIT UNION</div>
+  </div>
+  <div class="loading-dots"><span></span><span></span><span></span></div>
+</div>
+
+<!-- ======================================================
+     WELCOME
+====================================================== -->
+<div class="screen" id="s-welcome">
+  <div class="welcome-bg">
+    <div class="blob blob1"></div><div class="blob blob2"></div><div class="blob blob3"></div>
+  </div>
+  <div style="height:60px;flex-shrink:0;"></div>
+  <div class="welcome-center">
+    <div class="welcome-logo-box">
+      <svg width="50" height="50" viewBox="0 0 50 50" fill="none">
+        <polygon points="25,7 37,35 25,27 13,35" fill="#F5A623"/>
+        <polygon points="25,27 13,35 19,35" fill="#D4891A" opacity="0.55"/>
+        <polygon points="25,27 37,35 31,35" fill="#D4891A" opacity="0.55"/>
+      </svg>
+    </div>
+    <div class="welcome-wordmark">
+      <div class="w-global">GLOB<span class="w-arrow-inline">▲</span>L</div>
+      <div class="w-sub">CREDIT UNION</div>
+    </div>
+    <p class="welcome-tagline">Your trusted partner for smarter banking. Anywhere. Anytime.</p>
+  </div>
+  <div class="welcome-actions">
+    <button class="btn-gold" onclick="goTo('s-create-1')">
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+      Create Account
+    </button>
+    <button class="btn-outline-white" onclick="goTo('s-signin')">Sign In</button>
+  </div>
+  <p class="welcome-footer">🔒 256-bit SSL encrypted &nbsp;·&nbsp; FDIC Insured &nbsp;·&nbsp; Member NCUA<br>Your deposits are protected up to $250,000</p>
+</div>
+
+<!-- ======================================================
+     SIGN IN
+====================================================== -->
+<div class="screen" id="s-signin">
+  <div class="signin-inner">
+    <div class="signin-logo">
+      <svg width="34" height="34" viewBox="0 0 50 50" fill="none">
+        <polygon points="25,6 38,36 25,27 12,36" fill="#F5A623"/>
+      </svg>
+    </div>
+    <div class="signin-title">Welcome Back</div>
+    <div class="signin-sub">Sign in with your email or phone number</div>
+    <div class="signin-form" style="width:100%;">
+      <div class="input-wrap">
+        <input class="form-input has-icon" type="text" placeholder="Email or phone number" id="si-identifier" oninput="clearSigninErr()" autocomplete="username" autocorrect="off" autocapitalize="none" spellcheck="false">
+        <div class="input-icon">👤</div>
+      </div>
+      <div class="input-wrap">
+        <input class="form-input has-icon" type="password" placeholder="Password" id="si-pass" oninput="clearSigninErr()" autocomplete="current-password">
+        <div class="input-icon" onclick="togglePass('si-pass',this)">👁</div>
+      </div>
+      <div class="err-msg" id="si-err"></div>
+      <button class="btn-navy" style="margin-top:4px;" onclick="doSignIn()">
+        Sign In
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+    </div>
+    <div class="signin-links">
+      <div class="link-text" onclick="goTo('s-reset')">Forgot password?</div>
+      <div class="link-text">Don't have an account? <span onclick="goTo('s-create-1')">Sign up</span></div>
+      <div class="link-text"><span onclick="goBack()">← Back to Welcome</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ======================================================
+     CREATE ACCOUNT — STEP 1: PERSONAL
+====================================================== -->
+<div class="screen" id="s-create-1">
+  <div class="app-header">
+    <div class="header-row">
+      <button class="btn-back" onclick="goBack()"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
+      <div class="header-logo-sm"><svg width="18" height="18" viewBox="0 0 50 50" fill="none"><polygon points="25,6 38,36 25,27 12,36" fill="#F5A623"/></svg></div>
+      <div class="header-title">Create Account</div>
+      <div class="header-right-space"></div>
+    </div>
+    <div class="header-sub">Tell us about yourself</div>
+    <div class="progress-bar"><div class="prog-step active"></div><div class="prog-step"></div><div class="prog-step"></div><div class="prog-step"></div><div class="prog-step"></div></div>
+    <div class="prog-labels"><div class="prog-label active">Personal</div><div class="prog-label">Contact</div><div class="prog-label">Security</div><div class="prog-label">Photo</div><div class="prog-label">Review</div></div>
+  </div>
+  <div class="form-body">
+    <div class="form-group"><label class="form-label">Full Name <span class="req">*</span></label><input class="form-input" type="text" placeholder="e.g. John Alexander Smith" id="ca-name" autocomplete="name" autocapitalize="words" autocorrect="off"></div>
+    <div class="form-group"><label class="form-label">Date of Birth <span class="req">*</span></label><div class="input-wrap"><input class="form-input has-icon" type="date" id="ca-dob" autocomplete="bday"><div class="input-icon">📅</div></div></div>
+    <div class="form-group"><label class="form-label">Gender <span class="req">*</span></label><select class="form-select" id="ca-gender"><option value="">Select gender</option><option>Male</option><option>Female</option><option>Non-binary</option><option>Prefer not to say</option></select></div>
+    <div class="form-group"><label class="form-label">Country <span class="req">*</span></label><select class="form-select" id="ca-country"><option value="">Select country</option><option>United States</option><option>United Kingdom</option><option>Canada</option><option>Australia</option><option>Germany</option><option>France</option><option>Nigeria</option><option>Ghana</option><option>Kenya</option><option>South Africa</option><option>India</option></select></div>
+    <div class="form-group"><label class="form-label">State / Province <span class="req">*</span></label><input class="form-input" type="text" placeholder="e.g. California" id="ca-state" autocomplete="address-level1" autocapitalize="words" autocorrect="off"></div>
+    <div class="form-group"><label class="form-label">City <span class="req">*</span></label><input class="form-input" type="text" placeholder="e.g. Los Angeles" id="ca-city" autocomplete="address-level2" autocapitalize="words" autocorrect="off"></div>
+    <div class="form-group"><label class="form-label">Address <span class="req">*</span></label><input class="form-input" type="text" placeholder="e.g. 123 Main Street" id="ca-addr" autocomplete="street-address" autocapitalize="words" autocorrect="off"></div>
+    <div class="form-group"><label class="form-label">ZIP / Postal Code <span class="req">*</span></label><input class="form-input" type="text" placeholder="e.g. 90210" id="ca-zip" autocomplete="postal-code" autocorrect="off" autocapitalize="characters" inputmode="text"></div>
+    <button class="btn-navy" onclick="step1Next()">Continue <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></button>
+  </div>
+</div>
+
+<!-- ======================================================
+     CREATE ACCOUNT — STEP 2: CONTACT
+====================================================== -->
+<div class="screen" id="s-create-2">
+  <div class="app-header">
+    <div class="header-row">
+      <button class="btn-back" onclick="goBack()"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
+      <div class="header-logo-sm"><svg width="18" height="18" viewBox="0 0 50 50" fill="none"><polygon points="25,6 38,36 25,27 12,36" fill="#F5A623"/></svg></div>
+      <div class="header-title">Create Account</div><div class="header-right-space"></div>
+    </div>
+    <div class="header-sub">Contact information</div>
+    <div class="progress-bar"><div class="prog-step done"></div><div class="prog-step active"></div><div class="prog-step"></div><div class="prog-step"></div><div class="prog-step"></div></div>
+    <div class="prog-labels"><div class="prog-label done">Personal</div><div class="prog-label active">Contact</div><div class="prog-label">Security</div><div class="prog-label">Photo</div><div class="prog-label">Review</div></div>
+  </div>
+  <div class="form-body">
+    <div class="form-group"><label class="form-label">Email Address <span class="req">*</span></label><div class="input-wrap"><input class="form-input has-icon" type="email" placeholder="john@example.com" id="ca-email" autocomplete="email" autocorrect="off" autocapitalize="none" spellcheck="false" inputmode="email"><div class="input-icon">✉️</div></div></div>
+    <div class="err-msg" id="ca-email-err"></div>
+    <div class="form-group"><label class="form-label">Phone Number <span class="req">*</span></label><div class="input-wrap"><input class="form-input has-icon" type="tel" placeholder="+1 (555) 000-0000" id="ca-phone" autocomplete="tel" inputmode="tel"><div class="input-icon">📱</div></div></div>
+    <div class="err-msg" id="ca-phone-err"></div>
+    <div class="form-group"><label class="form-label">Occupation <span class="req">*</span></label><input class="form-input" type="text" placeholder="e.g. Software Engineer" id="ca-occ" autocapitalize="words" autocorrect="off"></div>
+    <div class="form-group"><label class="form-label">Annual Income <span class="req">*</span></label><select class="form-select" id="ca-income"><option value="">Select range</option><option>Under $25,000</option><option>$25,000 – $50,000</option><option>$50,000 – $100,000</option><option>$100,000 – $200,000</option><option>Over $200,000</option></select></div>
+    <div class="btn-row">
+      <button class="btn-outline-navy" onclick="goBack()">← Back</button>
+      <button class="btn-navy" style="margin-top:0;" onclick="step2Next()">Continue →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ======================================================
+     CREATE ACCOUNT — STEP 3: SECURITY
+====================================================== -->
+<div class="screen" id="s-create-3">
+  <div class="app-header">
+    <div class="header-row">
+      <button class="btn-back" onclick="goBack()"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
+      <div class="header-logo-sm"><svg width="18" height="18" viewBox="0 0 50 50" fill="none"><polygon points="25,6 38,36 25,27 12,36" fill="#F5A623"/></svg></div>
+      <div class="header-title">Create Account</div><div class="header-right-space"></div>
+    </div>
+    <div class="header-sub">Secure your account</div>
+    <div class="progress-bar"><div class="prog-step done"></div><div class="prog-step done"></div><div class="prog-step active"></div><div class="prog-step"></div><div class="prog-step"></div></div>
+    <div class="prog-labels"><div class="prog-label done">Personal</div><div class="prog-label done">Contact</div><div class="prog-label active">Security</div><div class="prog-label">Photo</div><div class="prog-label">Review</div></div>
+  </div>
+  <div class="form-body">
+    <div class="form-group"><label class="form-label">Password <span class="req">*</span></label><div class="input-wrap"><input class="form-input has-icon" type="password" placeholder="Min. 8 characters" id="ca-pass" autocomplete="new-password"><div class="input-icon" onclick="togglePass('ca-pass',this)">👁</div></div></div>
+    <div class="form-group"><label class="form-label">Confirm Password <span class="req">*</span></label><div class="input-wrap"><input class="form-input has-icon" type="password" placeholder="Re-enter your password" id="ca-cpass" autocomplete="new-password"><div class="input-icon" onclick="togglePass('ca-cpass',this)">👁</div></div></div>
+    <div class="form-group">
+      <label class="form-label">Create 4-Digit PIN <span class="req">*</span></label>
+      <input class="form-input" type="password" maxlength="4" pattern="[0-9]*" inputmode="numeric" placeholder="••••" id="ca-pin" oninput="updatePinDots(this.value)" autocomplete="off" autocorrect="off">
+      <div class="pin-dots" id="pin-dots"><div class="pin-dot" id="pd0"></div><div class="pin-dot" id="pd1"></div><div class="pin-dot" id="pd2"></div><div class="pin-dot" id="pd3"></div></div>
+      <p class="pin-field-note">Your PIN is used for quick authentication. Keep it confidential.</p>
+    </div>
+    <div class="btn-row">
+      <button class="btn-outline-navy" onclick="goBack()">← Back</button>
+      <button class="btn-navy" style="margin-top:0;" onclick="step3Next()">Continue →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ======================================================
+     CREATE ACCOUNT — STEP 4: PHOTO
+====================================================== -->
+<div class="screen" id="s-create-4">
+  <div class="app-header">
+    <div class="header-row">
+      <button class="btn-back" onclick="goBack()"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
+      <div class="header-logo-sm"><svg width="18" height="18" viewBox="0 0 50 50" fill="none"><polygon points="25,6 38,36 25,27 12,36" fill="#F5A623"/></svg></div>
+      <div class="header-title">Create Account</div><div class="header-right-space"></div>
+    </div>
+    <div class="header-sub">Add a profile photo</div>
+    <div class="progress-bar"><div class="prog-step done"></div><div class="prog-step done"></div><div class="prog-step done"></div><div class="prog-step active"></div><div class="prog-step"></div></div>
+    <div class="prog-labels"><div class="prog-label done">Personal</div><div class="prog-label done">Contact</div><div class="prog-label done">Security</div><div class="prog-label active">Photo</div><div class="prog-label">Review</div></div>
+  </div>
+  <div class="form-body" style="align-items:center;text-align:center;">
+    <p style="font-size:14px;color:var(--gray);line-height:1.6;margin-bottom:4px;">Upload a clear profile photo for your account. Your photo is resized and stored securely.</p>
+    <div class="photo-upload-area" id="photo-area" onclick="document.getElementById('photo-input-reg').click()">
+      <div id="photo-placeholder-reg"><div style="font-size:32px;margin-bottom:6px;">📷</div><div style="font-size:13px;font-weight:700;color:var(--navy);">Tap to upload</div><div style="font-size:11px;color:var(--gray);margin-top:4px;">JPG or PNG</div></div>
+      <img id="photo-preview-reg" style="display:none;width:140px;height:140px;object-fit:cover;border-radius:50%;position:absolute;inset:0;">
+    </div>
+    <input type="file" id="photo-input-reg" accept="image/jpeg,image/png,image/gif,image/webp" style="display:none;" onchange="previewRegPhoto(this)">
+    <p style="font-size:12px;color:var(--gray);font-style:italic;">Optional — you can add or change your photo later.</p>
+    <div style="height:24px;"></div>
+    <div class="btn-row" style="width:100%;">
+      <button class="btn-outline-navy" onclick="goBack()">← Back</button>
+      <button class="btn-navy" style="margin-top:0;" onclick="goTo('s-create-5');populateReview()">Continue →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ======================================================
+     CREATE ACCOUNT — STEP 5: REVIEW
+====================================================== -->
+<div class="screen" id="s-create-5">
+  <div class="app-header">
+    <div class="header-row">
+      <button class="btn-back" onclick="goBack()"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
+      <div class="header-logo-sm"><svg width="18" height="18" viewBox="0 0 50 50" fill="none"><polygon points="25,6 38,36 25,27 12,36" fill="#F5A623"/></svg></div>
+      <div class="header-title">Create Account</div><div class="header-right-space"></div>
+    </div>
+    <div class="header-sub">Review your details</div>
+    <div class="progress-bar"><div class="prog-step done"></div><div class="prog-step done"></div><div class="prog-step done"></div><div class="prog-step done"></div><div class="prog-step active"></div></div>
+    <div class="prog-labels"><div class="prog-label done">Personal</div><div class="prog-label done">Contact</div><div class="prog-label done">Security</div><div class="prog-label done">Photo</div><div class="prog-label active">Review</div></div>
+  </div>
+  <div class="screen-scroll">
+    <div class="review-card">
+      <div class="review-section">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+          <div class="review-section-title" style="margin-bottom:0;">Personal Info</div>
+          <div class="review-photo-preview" id="rv-photo"><span id="rv-initials">JS</span></div>
+        </div>
+        <div class="review-field"><span class="review-field-label">NAME</span><span class="review-field-value" id="rv-name">—</span></div>
+        <div class="review-field"><span class="review-field-label">DATE OF BIRTH</span><span class="review-field-value" id="rv-dob">—</span></div>
+        <div class="review-field"><span class="review-field-label">GENDER</span><span class="review-field-value" id="rv-gender">—</span></div>
+        <div class="review-field"><span class="review-field-label">COUNTRY</span><span class="review-field-value" id="rv-country">—</span></div>
+        <div class="review-field"><span class="review-field-label">CITY / STATE</span><span class="review-field-value" id="rv-location">—</span></div>
+      </div>
+      <div class="review-section">
+        <div class="review-section-title">Contact Details</div>
+        <div class="review-field"><span class="review-field-label">EMAIL</span><span class="review-field-value" id="rv-email">—</span></div>
+        <div class="review-field"><span class="review-field-label">PHONE</span><span class="review-field-value" id="rv-phone">—</span></div>
+        <div class="review-field"><span class="review-field-label">OCCUPATION</span><span class="review-field-value" id="rv-occ">—</span></div>
+        <div class="review-field"><span class="review-field-label">ANNUAL INCOME</span><span class="review-field-value" id="rv-income">—</span></div>
+      </div>
+      <div class="review-section">
+        <div class="review-section-title">Security</div>
+        <div class="review-field"><span class="review-field-label">PASSWORD</span><span class="review-field-value">••••••••</span></div>
+        <div class="review-field"><span class="review-field-label">PIN</span><span class="review-field-value">••••</span></div>
+      </div>
+    </div>
+    <div class="terms-row">
+      <div class="checkbox" id="terms-cb" onclick="toggleTerms()"></div>
+      <div class="terms-text">I agree to the <span class="terms-link">Terms & Conditions</span> and <span class="terms-link">Privacy Policy</span> of Global Credit Union. All information provided is accurate and complete.</div>
+    </div>
+    <div class="btn-row">
+      <button class="btn-outline-navy" onclick="goBack()">← Back</button>
+      <button class="btn-gold" onclick="finalCreateAccount()" style="color:var(--navy-dark);font-size:14px;">✓ Create Account</button>
+    </div>
+    <div style="height:20px;"></div>
+  </div>
+</div>
+
+<!-- ======================================================
+     RESET PASSWORD
+====================================================== -->
+<div class="screen" id="s-reset">
+  <div class="app-header">
+    <div class="header-row">
+      <button class="btn-back" onclick="goBack()"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
+      <div class="header-logo-sm"><svg width="18" height="18" viewBox="0 0 50 50" fill="none"><polygon points="25,6 38,36 25,27 12,36" fill="#F5A623"/></svg></div>
+      <div class="header-title">Reset Password</div><div class="header-right-space"></div>
+    </div>
+    <div class="header-sub">We'll send a reset link to your email</div>
+  </div>
+  <div style="flex:1;padding:24px 20px;">
+    <div class="reset-card">
+      <div class="reset-icon-circle">❓</div>
+      <div class="reset-card-title">Forgot your password?</div>
+      <div class="reset-card-sub">Enter the email address linked to your account and we'll send you a secure link to reset your password.</div>
+      <div class="form-group"><label class="form-label">Email Address <span class="req">*</span></label><div class="input-wrap"><input class="form-input has-icon" type="email" placeholder="your@email.com" id="reset-email" autocomplete="email" autocorrect="off" autocapitalize="none" spellcheck="false" inputmode="email"><div class="input-icon">✉️</div></div></div>
+      <button class="btn-navy" onclick="sendReset()">📨 Send Reset Link</button>
+    </div>
+  </div>
+</div>
+
+<!-- ======================================================
+     HOME
+====================================================== -->
+<div class="screen" id="s-home">
+  <div class="home-header">
+    <div class="home-header-row">
+      <div>
+        <div class="home-greeting" id="home-greeting">Good Morning</div>
+        <div class="home-username" id="home-username">Welcome 👋</div>
+      </div>
+      <div class="home-header-right">
+        <button class="icon-btn" onclick="showToast('No new notifications')">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          <div class="notif-dot"></div>
+        </button>
+        <button class="icon-btn" onclick="goTo('s-profile')">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="account-card">
+      <div class="card-header">
+        <div class="card-badge"><div class="dot"></div><span>Active</span></div>
+        <div style="color:rgba(255,255,255,0.5);font-size:12px;font-weight:600;">USD</div>
+      </div>
+      <div class="card-label" id="card-acct-type-label">SAVINGS ACCOUNT BALANCE</div>
+      <div class="card-balance">
+        <div class="card-balance-amount" id="balance-display">$0.00</div>
+        <button class="card-eye" onclick="toggleBalance()">👁</button>
+      </div>
+      <div class="card-acct-row">
+        <span class="card-acct-num" id="card-acct-num-display">•••• •••• ••••</span>
+        <button class="card-copy" onclick="copyActiveAcctNum()">⎘ Copy</button>
+      </div>
+      <div class="account-type-acct-box" id="both-accts-box">
+        <div class="account-type-row">
+          <span class="account-type-label">Savings Acct No.</span>
+          <span class="account-type-num" id="home-savings-acct-display">—</span>
+        </div>
+        <div class="account-type-row">
+          <span class="account-type-label">Fixed Acct No.</span>
+          <span class="account-type-num" id="home-fixed-acct-display">—</span>
+        </div>
+      </div>
+      <div class="card-tabs" style="margin-top:10px;">
+        <div class="card-tab active" id="tab-savings" onclick="setCardTab('savings',this)">Savings</div>
+        <div class="card-tab" id="tab-fixed" onclick="setCardTab('fixed',this)">Fixed</div>
+      </div>
+    </div>
+  </div>
+  <div class="home-body">
+    <div class="section-title">Quick Actions</div>
+    <div class="actions-grid">
+      <div class="action-item" onclick="goTo('s-deposit')"><div class="action-icon action-mint">💰</div><span class="action-label">Deposit</span></div>
+      <div class="action-item" onclick="goTo('s-withdraw')"><div class="action-icon action-coral">💸</div><span class="action-label">Withdraw</span></div>
+      <div class="action-item" onclick="goTo('s-transfer')"><div class="action-icon action-blue">↔️</div><span class="action-label">Transfer</span></div>
+      <div class="action-item" onclick="goTo('s-paybills')"><div class="action-icon action-purple">📄</div><span class="action-label">Pay Bills</span></div>
+      <div class="action-item" onclick="goTo('s-card')"><div class="action-icon action-yellow">💳</div><span class="action-label">Card</span></div>
+      <div class="action-item" onclick="goTo('s-statement')"><div class="action-icon action-sky">📊</div><span class="action-label">Statement</span></div>
+      <div class="action-item" onclick="goTo('s-verify')"><div class="action-icon action-teal">✅</div><span class="action-label">Verify</span></div>
+      <div class="action-item" onclick="goTo('s-profile')"><div class="action-icon action-pink">👤</div><span class="action-label">Profile</span></div>
+    </div>
+    <div class="section-row" style="margin-top:20px;">
+      <div class="section-title" style="margin-bottom:0;">Recent Transactions</div>
+      <div class="view-all" onclick="goTo('s-history')">View All →</div>
+    </div>
+    <div id="home-transactions"></div>
+  </div>
+  <div class="bottom-nav">
+    <div class="nav-item active" id="nav-home-home" onclick="setNav(this,'s-home')"><div class="nav-icon"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div><span class="nav-label">Home</span><div class="nav-active-pill"></div></div>
+    <div class="nav-item" onclick="setNav(this,'s-history')"><div class="nav-icon"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div><span class="nav-label">History</span></div>
+    <div class="nav-item" onclick="setNav(this,'s-actions')"><div class="nav-icon"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div><span class="nav-label">Actions</span></div>
+    <div class="nav-item" onclick="setNav(this,'s-card')"><div class="nav-icon"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></div><span class="nav-label">Card</span></div>
+    <div class="nav-item" onclick="setNav(this,'s-profile')"><div class="nav-icon"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><span class="nav-label">Profile</span></div>
+  </div>
+</div>
+
+<!-- ======================================================
+     DEPOSIT
+====================================================== -->
+<div class="screen" id="s-deposit">
+  <div class="app-header">
+    <div class="header-row"><button class="btn-back" onclick="goBack()"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button><div class="header-title">Deposit</div><div class="header-right-space"></div></div>
+    <div class="header-sub">Add funds to your account</div>
+  </div>
+  <div class="screen-scroll">
+    <div style="background:var(--white);border-radius:var(--radius-lg);padding:20px;box-shadow:var(--shadow);">
+      <div class="form-group">
+        <label class="form-label">Select Account <span class="req">*</span></label>
+        <select class="form-select" id="dep-account" onchange="updateDepositBalance()">
+          <option value="fixed">Fixed Account</option>
+          <option value="savings">Savings Account</option>
+        </select>
+      </div>
+
+      <!-- Account Details Card: account number, bank, account name — all copyable -->
+      <div class="dep-acct-details" id="dep-acct-details-box">
+        <div class="dep-acct-details-title">🏦 Account Details</div>
+        <div class="dep-detail-row">
+          <div class="dep-detail-left">
+            <div class="dep-detail-label">Account Number</div>
+            <div class="dep-detail-value acct-num" id="dep-detail-acct-num">—</div>
+          </div>
+          <button class="dep-copy-btn" onclick="copyDepositDetail('acct')">⎘ Copy</button>
+        </div>
+        <div class="dep-detail-row">
+          <div class="dep-detail-left">
+            <div class="dep-detail-label">Bank Name</div>
+            <div class="dep-detail-value" id="dep-detail-bank">Global CU</div>
+          </div>
+          <button class="dep-copy-btn" onclick="copyDepositDetail('bank')">⎘ Copy</button>
+        </div>
+        <div class="dep-detail-row">
+          <div class="dep-detail-left">
+            <div class="dep-detail-label">Account Name</div>
+            <div class="dep-detail-value" id="dep-detail-name">—</div>
+          </div>
+          <button class="dep-copy-btn" onclick="copyDepositDetail('name')">⎘ Copy</button>
+        </div>
+      </div>
+
+      <div class="avail-box"><span class="avail-box-label">Current Balance</span><span class="avail-box-amount" id="dep-avail">$0.00</span></div>
+      <div class="form-group">
+        <label class="form-label">Amount (USD) <span class="req">*</span></label>
+        <input class="form-input" type="number" min="0" placeholder="0.00" id="dep-amount" style="font-size:22px;font-weight:700;color:var(--navy);" inputmode="decimal">
+        <div class="amount-presets">
+          <button class="preset-btn" onclick="setPreset('dep-amount',50,this)">$50</button>
+          <button class="preset-btn" onclick="setPreset('dep-amount',100,this)">$100</button>
+          <button class="preset-btn" onclick="setPreset('dep-amount',250,this)">$250</button>
+          <button class="preset-btn" onclick="setPreset('dep-amount',500,this)">$500</button>
+        </div>
+      </div>
+      <div class="form-group"><label class="form-label">Description <span style="color:var(--gray);font-weight:400;">(optional)</span></label><input class="form-input" type="text" placeholder="e.g. Monthly savings deposit" id="dep-note" autocapitalize="sentences"></div>
+      <button class="btn-navy" onclick="confirmDeposit()">📥 Confirm Deposit</button>
+    </div>
+  </div>
+  <div style="height:20px;flex-shrink:0;"></div>
+</div>
+
+<!-- ======================================================
+     WITHDRAW
+====================================================== -->
+<div class="screen" id="s-withdraw">
+  <div class="app-header">
+    <div class="header-row"><button class="btn-back" onclick="goBack()"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button><div class="header-title">Withdraw</div><div class="header-right-space"></div></div>
+    <div class="header-sub">Send to your crypto wallet</div>
+  </div>
+  <div class="screen-scroll">
+    <div style="background:var(--white);border-radius:var(--radius-lg);padding:20px;box-shadow:var(--shadow);">
+      <div class="form-group">
+        <label class="form-label">From Account <span class="req">*</span></label>
+        <select class="form-select" id="wd-account" onchange="updateWithdrawBalance()">
+          <option value="savings">Savings Account</option>
+          <option value="fixed">Fixed Account</option>
+        </select>
+      </div>
+      <div class="avail-box"><span class="avail-box-label">Available Balance</span><span class="avail-box-amount" id="wd-avail">$0.00</span></div>
+      <div class="form-group">
+        <label class="form-label">Amount (USD) <span class="req">*</span></label>
+        <input class="form-input" type="number" min="0" placeholder="0.00" id="wd-amount" style="font-size:22px;font-weight:700;color:var(--navy);" inputmode="decimal">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Crypto Network <span class="req">*</span></label>
+        <div class="crypto-grid">
+          <div class="crypto-btn" id="crypto-btc" onclick="selectCrypto('BTC')"><div class="c-icon">₿</div><div class="c-name">Bitcoin</div><div style="font-size:10px;color:var(--gray);">BTC</div></div>
+          <div class="crypto-btn" id="crypto-eth" onclick="selectCrypto('ETH')"><div class="c-icon">⟠</div><div class="c-name">Ethereum</div><div style="font-size:10px;color:var(--gray);">ETH</div></div>
+          <div class="crypto-btn" id="crypto-usdt" onclick="selectCrypto('USDT')"><div class="c-icon">₮</div><div class="c-name">Tether</div><div style="font-size:10px;color:var(--gray);">USDT</div></div>
+        </div>
+        <input type="hidden" id="wd-network" value="">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Wallet Address <span class="req">*</span></label>
+        <input class="form-input" type="text" placeholder="Enter your wallet address" id="wd-wallet" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false">
+        <p style="font-size:11px;color:var(--gray);margin-top:6px;line-height:1.5;">⚠️ Double-check your wallet address. Transactions are irreversible.</p>
+      </div>
+      <button class="btn-coral" onclick="confirmWithdraw()">📤 Confirm Withdrawal</button>
+    </div>
+  </div>
+  <div style="height:20px;flex-shrink:0;"></div>
+</div>
+
+<!-- ======================================================
+     TRANSFER
+====================================================== -->
+<div class="screen" id="s-transfer">
+  <div class="app-header">
+    <div class="header-row"><button class="btn-back" onclick="goBack()"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button><div class="header-title">Transfer</div><div class="header-right-space"></div></div>
+    <div class="header-sub">Send money to any account</div>
+  </div>
+  <div class="screen-scroll">
+    <div style="background:var(--white);border-radius:var(--radius-lg);padding:20px;box-shadow:var(--shadow);">
+      <div class="form-group">
+        <label class="form-label">From Account <span class="req">*</span></label>
+        <select class="form-select" id="tr-account" onchange="updateTransferBalance()">
+          <option value="savings">Savings Account</option>
+          <option value="fixed">Fixed Account</option>
+        </select>
+      </div>
+      <div class="avail-box"><span class="avail-box-label">Available Balance</span><span class="avail-box-amount" id="tr-avail">$0.00</span></div>
+      <div class="form-group"><label class="form-label">Recipient Account Number <span class="req">*</span></label><input class="form-input" type="text" placeholder="Enter 10-digit account number" id="tr-acct" autocomplete="off" autocorrect="off" autocapitalize="none" inputmode="numeric"></div>
+      <div class="form-group"><label class="form-label">Recipient Name <span class="req">*</span></label><input class="form-input" type="text" placeholder="Full name of recipient" id="tr-name" autocomplete="off" autocapitalize="words"></div>
+      <div class="form-group"><label class="form-label">Amount (USD) <span class="req">*</span></label><input class="form-input" type="number" min="0" placeholder="0.00" id="tr-amount" style="font-size:20px;font-weight:700;color:var(--navy);" inputmode="decimal"></div>
+      <div class="form-group"><label class="form-label">Note <span style="color:var(--gray);font-weight:400;">(optional)</span></label><input class="form-input" type="text" placeholder="What's it for?" id="tr-note" autocapitalize="sentences"></div>
+      <button class="btn-navy" onclick="confirmTransfer()">✈️ Send Money</button>
+    </div>
+  </div>
+  <div style="height:20px;flex-shrink:0;"></div>
+</div>
+
+<!-- ======================================================
+     PAY BILLS
+====================================================== -->
+<div class="screen" id="s-paybills">
+  <div class="app-header">
+    <div class="header-row"><button class="btn-back" onclick="goBack()"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button><div class="header-title">Pay Bills</div><div class="header-right-space"></div></div>
+    <div class="header-sub">Select a category to continue</div>
+  </div>
+  <div class="screen-scroll">
+    <div class="bills-grid">
+      <div class="bill-card" onclick="showBillForm('Electricity')"><div class="bill-icon">⚡</div><div class="bill-name">Electricity</div></div>
+      <div class="bill-card" onclick="showBillForm('Water')"><div class="bill-icon">💧</div><div class="bill-name">Water</div></div>
+      <div class="bill-card" onclick="showBillForm('Internet')"><div class="bill-icon">🌐</div><div class="bill-name">Internet</div></div>
+      <div class="bill-card" onclick="showBillForm('Phone')"><div class="bill-icon">📱</div><div class="bill-name">Phone</div></div>
+      <div class="bill-card" onclick="showBillForm('TV / Cable')"><div class="bill-icon">📺</div><div class="bill-name">TV / Cable</div></div>
+      <div class="bill-card" onclick="showBillForm('Insurance')"><div class="bill-icon">🛡️</div><div class="bill-name">Insurance</div></div>
+      <div class="bill-card" onclick="showBillForm('Rent')"><div class="bill-icon">🏠</div><div class="bill-name">Rent</div></div>
+      <div class="bill-card" onclick="showBillForm('Subscription')"><div class="bill-icon">🔄</div><div class="bill-name">Subscription</div></div>
+    </div>
+  </div>
+  <div style="height:20px;flex-shrink:0;"></div>
+</div>
+
+<!-- ======================================================
+     BILL PAY FORM
+====================================================== -->
+<div class="screen" id="s-billpay">
+  <div class="app-header">
+    <div class="header-row"><button class="btn-back" onclick="goBack()"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button><div class="header-title" id="bill-screen-title">Pay Bill</div><div class="header-right-space"></div></div>
+  </div>
+  <div class="screen-scroll">
+    <div style="background:var(--white);border-radius:var(--radius-lg);padding:20px;box-shadow:var(--shadow);">
+      <div class="form-group">
+        <label class="form-label">From Account <span class="req">*</span></label>
+        <select class="form-select" id="bill-account" onchange="updateBillBalance()">
+          <option value="savings">Savings Account</option>
+          <option value="fixed">Fixed Account</option>
+        </select>
+      </div>
+      <div class="avail-box"><span class="avail-box-label">Available Balance</span><span class="avail-box-amount" id="bill-avail">$0.00</span></div>
+      <div class="form-group"><label class="form-label">Account / Customer Number <span class="req">*</span></label><input class="form-input" type="text" placeholder="Your billing account number" id="bill-cust-num" autocomplete="off" autocorrect="off" autocapitalize="none"></div>
+      <div class="form-group"><label class="form-label">Amount (USD) <span class="req">*</span></label><input class="form-input" type="number" min="0" placeholder="0.00" id="bill-amount" style="font-size:20px;font-weight:700;color:var(--navy);" inputmode="decimal"></div>
+      <div class="form-group"><label class="form-label">Note <span style="color:var(--gray);font-weight:400;">(optional)</span></label><input class="form-input" type="text" placeholder="Reference or note" id="bill-note" autocapitalize="sentences"></div>
+      <button class="btn-navy" onclick="confirmBillPay()">💳 Pay Now</button>
+    </div>
+  </div>
+  <div style="height:20px;flex-shrink:0;"></div>
+</div>
+
+<!-- ======================================================
+     TRANSACTION HISTORY
+====================================================== -->
+<div class="screen" id="s-history">
+  <div class="app-header">
+    <div class="header-row"><button class="btn-back" onclick="goBack()"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button><div class="header-title">Transactions</div><div class="header-right-space"></div></div>
+    <div class="header-sub" id="tx-count">0 total transactions</div>
+  </div>
+  <div class="screen-scroll">
+    <div class="search-filter-row">
+      <div class="search-wrap"><span class="search-icon">🔍</span><input class="search-input" type="search" placeholder="Search transactions..." oninput="filterTx(this.value)" autocorrect="off" autocapitalize="none" spellcheck="false"></div>
+      <select class="filter-select" onchange="filterTxType(this.value)">
+        <option value="">All Types</option>
+        <option value="Deposit">Deposits</option>
+        <option value="Withdrawal">Withdrawals</option>
+        <option value="Transfer">Transfers</option>
+        <option value="Bill Payment">Bill Payments</option>
+      </select>
+    </div>
+    <div id="history-list"></div>
+  </div>
+  <div class="bottom-nav">
+    <div class="nav-item" onclick="setNav(this,'s-home')"><div class="nav-icon"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div><span class="nav-label">Home</span></div>
+    <div class="nav-item active"><div class="nav-icon"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div><span class="nav-label">History</span><div class="nav-active-pill"></div></div>
+    <div class="nav-item" onclick="setNav(this,'s-actions')"><div class="nav-icon"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div><span class="nav-label">Actions</span></div>
+    <div class="nav-item" onclick="setNav(this,'s-card')"><div class="nav-icon"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></div><span class="nav-label">Card</span></div>
+    <div class="nav-item" onclick="setNav(this,'s-profile')"><div class="nav-icon"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><span class="nav-label">Profile</span></div>
+  </div>
+</div>
+
+<!-- ======================================================
+     VIRTUAL CARD
+====================================================== -->
+<div class="screen" id="s-card">
+  <div class="app-header">
+    <div class="header-row"><button class="btn-back" onclick="goBack()"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button><div class="header-title">Virtual Card</div><div class="header-right-space"></div></div>
+    <div class="header-sub">Manage your virtual debit card</div>
+  </div>
+  <div class="screen-scroll">
+    <div class="vcard" id="virtual-card">
+      <div class="vcard-type">GLOBAL CREDIT UNION · VIRTUAL DEBIT</div>
+      <div style="display:flex;justify-content:flex-end;margin-bottom:14px;"><svg width="32" height="22" viewBox="0 0 54 34" fill="none"><circle cx="20" cy="17" r="17" fill="#EB001B" opacity="0.9"/><circle cx="34" cy="17" r="17" fill="#F79E1B" opacity="0.9"/></svg></div>
+      <div class="vcard-num" id="vcard-number">•••• •••• •••• ••••</div>
+      <div class="vcard-footer">
+        <div><div class="vcard-label">CARD HOLDER</div><div class="vcard-value" id="vcard-holder">— —</div></div>
+        <div><div class="vcard-label">EXPIRES</div><div class="vcard-value">04/29</div></div>
+        <div><div class="vcard-label">CVV</div><div class="vcard-value" id="vcard-cvv">•••</div></div>
+      </div>
+    </div>
+    <div class="card-actions">
+      <div class="card-action-btn" onclick="toggleCardReveal()"><span style="font-size:20px;">👁</span><div class="card-action-label">Show</div></div>
+      <div class="card-action-btn" onclick="copyVCardNumber()"><span style="font-size:20px;">⎘</span><div class="card-action-label">Copy</div></div>
+      <div class="card-action-btn freeze-btn" onclick="freezeCard()"><span style="font-size:20px;">❄️</span><div class="card-action-label" id="freeze-label">Freeze</div></div>
+    </div>
+    <div class="card-details-card">
+      <div class="card-detail-row"><span class="card-detail-label">STATUS</span><span class="card-detail-value" id="card-status"><span style="color:var(--green);">●</span> Active</span></div>
+      <div class="card-detail-row"><span class="card-detail-label">AVAILABLE LIMIT</span><span class="card-detail-value">$5,000.00 / day</span></div>
+      <div class="card-detail-row"><span class="card-detail-label">CARD TYPE</span><span class="card-detail-value">Debit Mastercard</span></div>
+      <div class="card-detail-row"><span class="card-detail-label">LINKED ACCOUNT</span><span class="card-detail-value" id="vcard-linked-acct">Savings</span></div>
+    </div>
+  </div>
+  <div class="bottom-nav">
+    <div class="nav-item" onclick="setNav(this,'s-home')"><div class="nav-icon"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div><span class="nav-label">Home</span></div>
+    <div class="nav-item" onclick="setNav(this,'s-history')"><div class="nav-icon"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div><span class="nav-label">History</span></div>
+    <div class="nav-item" onclick="setNav(this,'s-actions')"><div class="nav-icon"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div><span class="nav-label">Actions</span></div>
+    <div class="nav-item active"><div class="nav-icon"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></div><span class="nav-label">Card</span><div class="nav-active-pill"></div></div>
+    <div class="nav-item" onclick="setNav(this,'s-profile')"><div class="nav-icon"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><span class="nav-label">Profile</span></div>
+  </div>
+</div>
+
+<!-- ======================================================
+     QUICK ACTIONS
+====================================================== -->
+<div class="screen" id="s-actions">
+  <div class="app-header">
+    <div class="header-row"><button class="btn-back" onclick="goBack()"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button><div class="header-title">Quick Actions</div><div class="header-right-space"></div></div>
+    <div class="header-sub">What would you like to do?</div>
+  </div>
+  <div class="screen-scroll">
+    <div class="qa-grid">
+      <div class="qa-card" onclick="goTo('s-deposit')"><div class="qa-icon action-mint">💰</div><div><div class="qa-label">Deposit</div><div class="qa-sub">Add funds</div></div></div>
+      <div class="qa-card" onclick="goTo('s-withdraw')"><div class="qa-icon action-coral">💸</div><div><div class="qa-label">Withdraw</div><div class="qa-sub">Cash out</div></div></div>
+      <div class="qa-card" onclick="goTo('s-transfer')"><div class="qa-icon action-blue">↔️</div><div><div class="qa-label">Transfer</div><div class="qa-sub">Send money</div></div></div>
+      <div class="qa-card" onclick="goTo('s-paybills')"><div class="qa-icon action-purple">📄</div><div><div class="qa-label">Pay Bills</div><div class="qa-sub">Utilities & more</div></div></div>
+      <div class="qa-card" onclick="goTo('s-card')"><div class="qa-icon action-yellow">💳</div><div><div class="qa-label">Card</div><div class="qa-sub">Virtual card</div></div></div>
+      <div class="qa-card" onclick="goTo('s-statement')"><div class="qa-icon action-sky">📊</div><div><div class="qa-label">Statement</div><div class="qa-sub">Account report</div></div></div>
+      <div class="qa-card" onclick="goTo('s-verify')"><div class="qa-icon action-teal">✅</div><div><div class="qa-label">Verify</div><div class="qa-sub">ID verification</div></div></div>
+      <div class="qa-card" onclick="goTo('s-profile')"><div class="qa-icon action-pink">👤</div><div><div class="qa-label">Profile</div><div class="qa-sub">Your account</div></div></div>
+    </div>
+  </div>
+  <div class="bottom-nav">
+    <div class="nav-item" onclick="setNav(this,'s-home')"><div class="nav-icon"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div><span class="nav-label">Home</span></div>
+    <div class="nav-item" onclick="setNav(this,'s-history')"><div class="nav-icon"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div><span class="nav-label">History</span></div>
+    <div class="nav-item active"><div class="nav-icon"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div><span class="nav-label">Actions</span><div class="nav-active-pill"></div></div>
+    <div class="nav-item" onclick="setNav(this,'s-card')"><div class="nav-icon"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></div><span class="nav-label">Card</span></div>
+    <div class="nav-item" onclick="setNav(this,'s-profile')"><div class="nav-icon"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><span class="nav-label">Profile</span></div>
+  </div>
+</div>
+
+<!-- ======================================================
+     VERIFICATION
+====================================================== -->
+<div class="screen" id="s-verify">
+  <div class="app-header">
+    <div class="header-row"><button class="btn-back" onclick="goBack()"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button><div class="header-title">Verification</div><div class="header-right-space"></div></div>
+    <div class="header-sub">Identity document verification</div>
+  </div>
+  <div class="screen-scroll">
+    <div class="not-verified-alert"><div class="not-verified-badge">NOT VERIFIED</div><div class="not-verified-text">Upload all documents below to verify your identity and unlock full account features.</div></div>
+
+    <!-- National ID Card -->
+    <div class="verify-card" id="vcard-id">
+      <div class="verify-icon">🪪</div>
+      <div class="verify-info">
+        <div class="verify-name">National ID Card</div>
+        <div class="verify-sub" id="vdoc-id-sub">Front and back of your government ID</div>
+        <div class="vdoc-status" id="vdoc-id-status" style="display:none;"></div>
+      </div>
+      <button class="btn-upload" id="vbtn-id" onclick="document.getElementById('vfile-id').click()">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
+        Upload
+      </button>
+      <input type="file" id="vfile-id" accept="image/jpeg,image/png,image/gif,image/webp,application/pdf" style="display:none;" onchange="handleDocUpload(this,'id','vdoc-id-sub','vdoc-id-status','vbtn-id')">
+    </div>
+
+    <!-- Passport -->
+    <div class="verify-card" id="vcard-passport">
+      <div class="verify-icon">🛂</div>
+      <div class="verify-info">
+        <div class="verify-name">Passport</div>
+        <div class="verify-sub" id="vdoc-passport-sub">Biographical page of your passport</div>
+        <div class="vdoc-status" id="vdoc-passport-status" style="display:none;"></div>
+      </div>
+      <button class="btn-upload" id="vbtn-passport" onclick="document.getElementById('vfile-passport').click()">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
+        Upload
+      </button>
+      <input type="file" id="vfile-passport" accept="image/jpeg,image/png,image/gif,image/webp,application/pdf" style="display:none;" onchange="handleDocUpload(this,'passport','vdoc-passport-sub','vdoc-passport-status','vbtn-passport')">
+    </div>
+
+    <!-- Driver's License -->
+    <div class="verify-card" id="vcard-license">
+      <div class="verify-icon">🚗</div>
+      <div class="verify-info">
+        <div class="verify-name">Driver's License</div>
+        <div class="verify-sub" id="vdoc-license-sub">Front and back of your license</div>
+        <div class="vdoc-status" id="vdoc-license-status" style="display:none;"></div>
+      </div>
+      <button class="btn-upload" id="vbtn-license" onclick="document.getElementById('vfile-license').click()">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
+        Upload
+      </button>
+      <input type="file" id="vfile-license" accept="image/jpeg,image/png,image/gif,image/webp,application/pdf" style="display:none;" onchange="handleDocUpload(this,'license','vdoc-license-sub','vdoc-license-status','vbtn-license')">
+    </div>
+
+    <div style="background:var(--white);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow-sm);margin-top:4px;">
+      <p style="font-size:13px;color:var(--gray);line-height:1.7;">📋 Accepted: JPG, PNG, PDF. Documents must be clear, valid, and unexpired. Processing typically takes 1–2 business days.</p>
+    </div>
+  </div>
+  <div style="height:20px;flex-shrink:0;"></div>
+</div>
+
+<!-- ======================================================
+     PROFILE
+====================================================== -->
+<div class="screen" id="s-profile">
+  <div class="profile-header">
+    <div style="display:flex;flex-direction:column;align-items:center;">
+      <div class="profile-photo" id="profile-photo-el" onclick="document.getElementById('profile-photo-input').click()">
+        <span id="profile-avatar-initials">JS</span>
+        <div class="profile-photo-edit" onclick="event.stopPropagation();document.getElementById('profile-photo-input').click()">
+          <svg width="13" height="13" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+        </div>
+      </div>
+      <input type="file" id="profile-photo-input" accept="image/jpeg,image/png,image/gif,image/webp" style="display:none;" onchange="updateProfilePhoto(this)">
+      <div class="profile-name" id="profile-name-el">—</div>
+      <div class="profile-acct" id="profile-email-sub">—</div>
+    </div>
+  </div>
+  <div class="profile-body">
+    <div class="info-card clickable" onclick="showToast('Email copied!')">
+      <div class="info-card-inner">
+        <div class="info-card-icon">✉️</div>
+        <div class="info-card-content"><div class="info-card-label">EMAIL</div><div class="info-card-value" id="prof-email">—</div></div>
+        <div style="color:var(--gray);font-size:16px;">›</div>
+      </div>
+    </div>
+    <div class="info-card clickable" onclick="showToast('Phone copied!')">
+      <div class="info-card-inner">
+        <div class="info-card-icon">📱</div>
+        <div class="info-card-content"><div class="info-card-label">PHONE</div><div class="info-card-value" id="prof-phone">—</div></div>
+        <div style="color:var(--gray);font-size:16px;">›</div>
+      </div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-inner">
+        <div class="info-card-icon">📍</div>
+        <div class="info-card-content"><div class="info-card-label">LOCATION</div><div class="info-card-value" id="prof-location">—</div></div>
+      </div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-inner">
+        <div class="info-card-icon">💼</div>
+        <div class="info-card-content"><div class="info-card-label">OCCUPATION</div><div class="info-card-value" id="prof-occ">—</div></div>
+      </div>
+    </div>
+    <!-- Account Numbers -->
+    <div class="info-card">
+      <div class="info-card-inner" style="align-items:flex-start;">
+        <div class="info-card-icon">🏦</div>
+        <div class="info-card-content">
+          <div class="info-card-label">SAVINGS ACCOUNT No.</div>
+          <div class="info-card-acct" id="prof-savings-acct">—</div>
+        </div>
+        <button class="copy-btn-inline" onclick="copyText(currentUser?.savingsAccountNumber,'Savings account number copied!')">⎘</button>
+      </div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-inner" style="align-items:flex-start;">
+        <div class="info-card-icon">🔒</div>
+        <div class="info-card-content">
+          <div class="info-card-label">FIXED ACCOUNT No.</div>
+          <div class="info-card-acct" id="prof-fixed-acct">—</div>
+        </div>
+        <button class="copy-btn-inline" onclick="copyText(currentUser?.fixedAccountNumber,'Fixed account number copied!')">⎘</button>
+      </div>
+    </div>
+    <div class="section-divider"></div>
+    <div class="menu-item" onclick="goTo('s-editprofile')"><div class="menu-item-icon" style="background:#EEF4FF;">✏️</div><div class="menu-item-label">Edit Profile</div><span style="color:var(--gray);">›</span></div>
+    <div class="menu-item" onclick="goTo('s-verify')"><div class="menu-item-icon" style="background:#E8FBF4;">✅</div><div class="menu-item-label">Verification</div><div style="background:#FEF0EE;color:var(--coral);font-size:11px;font-weight:700;padding:3px 8px;border-radius:10px;">Pending</div></div>
+    <div class="menu-item" onclick="goTo('s-statement')"><div class="menu-item-icon" style="background:#FFFBEA;">📊</div><div class="menu-item-label">Account Statement</div><span style="color:var(--gray);">›</span></div>
+    <div class="menu-item signout" onclick="signOut()"><div class="menu-item-icon">🚪</div><div class="menu-item-label">Sign Out</div></div>
+    <div style="height:20px;"></div>
+  </div>
+  <div class="bottom-nav">
+    <div class="nav-item" onclick="setNav(this,'s-home')"><div class="nav-icon"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div><span class="nav-label">Home</span></div>
+    <div class="nav-item" onclick="setNav(this,'s-history')"><div class="nav-icon"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div><span class="nav-label">History</span></div>
+    <div class="nav-item" onclick="setNav(this,'s-actions')"><div class="nav-icon"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div><span class="nav-label">Actions</span></div>
+    <div class="nav-item" onclick="setNav(this,'s-card')"><div class="nav-icon"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></div><span class="nav-label">Card</span></div>
+    <div class="nav-item active"><div class="nav-icon"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><span class="nav-label">Profile</span><div class="nav-active-pill"></div></div>
+  </div>
+</div>
+
+<!-- ======================================================
+     EDIT PROFILE
+====================================================== -->
+<div class="screen" id="s-editprofile">
+  <div class="app-header">
+    <div class="header-row"><button class="btn-back" onclick="goBack()"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button><div class="header-title">Edit Profile</div><div class="header-right-space"></div></div>
+  </div>
+  <div class="screen-scroll">
+    <div class="ep-photo-section">
+      <div class="ep-photo-circle" id="ep-photo-circle" onclick="document.getElementById('ep-photo-file').click()">
+        <img id="ep-photo-preview" style="display:none;">
+        <span id="ep-photo-initials">JS</span>
+        <div class="ep-cam-overlay">
+          <svg width="22" height="22" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+        </div>
+      </div>
+      <div style="flex:1;">
+        <div style="font-size:14px;font-weight:700;color:var(--navy);">Profile Photo</div>
+        <div style="font-size:12px;color:var(--gray);margin-top:3px;">Tap photo or button to change · Resized to 300×300px</div>
+        <button class="btn-upload" style="margin-top:8px;padding:6px 14px;font-size:12px;" onclick="document.getElementById('ep-photo-file').click()">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" style="flex-shrink:0;"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+          Change Photo
+        </button>
+        <input type="file" id="ep-photo-file" accept="image/jpeg,image/png,image/gif,image/webp" style="display:none;" onchange="previewEditPhoto(this)">
+      </div>
+    </div>
+    <div style="background:var(--white);border-radius:var(--radius-lg);padding:20px;box-shadow:var(--shadow);">
+      <div class="form-group"><label class="form-label">Full Name <span class="req">*</span></label><input class="form-input" type="text" id="ep-name" autocomplete="name" autocapitalize="words" autocorrect="off"></div>
+      <div class="form-group"><label class="form-label">Email Address <span class="req">*</span></label><input class="form-input" type="email" id="ep-email" autocomplete="email" autocorrect="off" autocapitalize="none" spellcheck="false" inputmode="email"></div>
+      <div class="form-group"><label class="form-label">Phone Number</label><input class="form-input" type="tel" id="ep-phone" autocomplete="tel" inputmode="tel"></div>
+      <div class="form-group"><label class="form-label">Occupation</label><input class="form-input" type="text" id="ep-occ" autocapitalize="words" autocorrect="off"></div>
+      <div class="form-group"><label class="form-label">City</label><input class="form-input" type="text" id="ep-city" autocomplete="address-level2" autocapitalize="words" autocorrect="off"></div>
+      <div class="form-group">
+        <label class="form-label">Change PIN <span style="color:var(--gray);font-weight:400;">(optional)</span></label>
+        <div class="input-wrap"><input class="form-input has-icon" type="password" maxlength="4" pattern="[0-9]*" inputmode="numeric" placeholder="New 4-digit PIN" id="ep-pin" autocomplete="off" autocorrect="off"><div class="input-icon">🔑</div></div>
+      </div>
+      <button class="btn-navy" onclick="saveProfile()">✓ Save Changes</button>
+    </div>
+    <div style="height:20px;"></div>
+  </div>
+</div>
+
+<!-- ======================================================
+     STATEMENT
+====================================================== -->
+<div class="screen" id="s-statement">
+  <div class="app-header">
+    <div class="header-row"><button class="btn-back" onclick="goBack()"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button><div class="header-title">Statement</div><div class="header-right-space"></div></div>
+    <div class="header-sub">Account statement overview</div>
+  </div>
+  <div class="screen-scroll">
+    <div style="display:flex;gap:10px;margin-bottom:16px;">
+      <select class="form-select" id="stmt-acct-filter" onchange="renderStatement()" style="flex:1;"><option value="all">All Accounts</option><option value="savings">Savings</option><option value="fixed">Fixed</option></select>
+      <select class="form-select" style="flex:1;"><option>This Month</option><option>Last Month</option><option>Last 3 Months</option><option>Last Year</option></select>
+    </div>
+    <div class="summary-cards">
+      <div class="summary-card"><div class="summary-label" style="color:var(--navy);">BALANCE</div><div class="summary-value" id="stmt-balance">$0.00</div></div>
+      <div class="summary-card"><div class="summary-label" style="color:var(--green);">TOTAL IN</div><div class="summary-value" style="color:var(--green);" id="stmt-in">$0.00</div></div>
+      <div class="summary-card"><div class="summary-label" style="color:var(--coral);">TOTAL OUT</div><div class="summary-value" style="color:var(--coral);" id="stmt-out">$0.00</div></div>
+    </div>
+    <div id="statement-list"></div>
+  </div>
+  <div style="height:20px;flex-shrink:0;"></div>
+</div>
+
+<!-- PAGE LOADER -->
+<div class="loading-overlay hide" id="page-loader">
+  <div style="animation:logoFloat 1.5s ease-in-out infinite;">
+    <svg width="52" height="52" viewBox="0 0 52 52" fill="none">
+      <polygon points="26,8 38,36 26,28 14,36" fill="#F5A623"/>
+      <polygon points="26,28 14,36 20,36" fill="#D4891A" opacity="0.6"/>
+      <polygon points="26,28 38,36 32,36" fill="#D4891A" opacity="0.6"/>
+    </svg>
+  </div>
+  <div class="spinner"></div>
+</div>
+
+</div><!-- .app -->
+
+<script>
+// ============================================================
+// DATABASE LAYER (localStorage)
+// ============================================================
+const DB = {
+  getUsers:    () => JSON.parse(localStorage.getItem('gcu_users') || '[]'),
+  saveUsers:   (u) => localStorage.setItem('gcu_users', JSON.stringify(u)),
+  getSession:  () => localStorage.getItem('gcu_session'),
+  setSession:  (id) => localStorage.setItem('gcu_session', id),
+  clearSession:() => localStorage.removeItem('gcu_session'),
+  getUser: (id) => DB.getUsers().find(u => u.id === id) || null,
+  updateUser: (user) => {
+    const users = DB.getUsers();
+    const i = users.findIndex(u => u.id === user.id);
+    if (i >= 0) { users[i] = user; DB.saveUsers(users); }
+  }
+};
+
+// ============================================================
+// APP STATE
+// ============================================================
+let currentUser = null;
+let navHistory = [];
+let currentScreen = 's-loading';
+let balanceVisible = true;
+let cardFrozen = false;
+let cardRevealed = false;
+let termsChecked = false;
+let regData = {};
+let activeCardTab = 'savings';
+let selectedCrypto = '';
+let pendingEditPhoto = null;
+let pinLockEntry = '';         // current digits typed on pin lock
+let appWasHidden  = false;     // tracks if app went to background
+
+// ============================================================
+// HELPERS
+// ============================================================
+function genId() { return Date.now().toString(36) + Math.random().toString(36).substr(2,6); }
+function genAcctNum() { return Math.floor(1000000000 + Math.random() * 9000000000).toString(); }
+function isValidEmail(e) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e); }
+function formatCurrency(n) { return '$' + (n||0).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
+function formatDateTime(ts) {
+  const d = new Date(ts);
+  return d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) +
+    ' · ' + d.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
+}
+function getInitials(name) {
+  return (name||'?').split(' ').filter(Boolean).map(w=>w[0]).join('').toUpperCase().slice(0,2);
+}
+function copyText(text, msg) {
+  if (!text) return;
+  navigator.clipboard.writeText(text).then(() => showToast(msg || 'Copied!')).catch(() => {
+    // fallback
+    const el = document.createElement('textarea');
+    el.value = text; document.body.appendChild(el);
+    el.select(); document.execCommand('copy'); document.body.removeChild(el);
+    showToast(msg || 'Copied!');
+  });
+}
+
+// ============================================================
+// NAVIGATION
+// ============================================================
+function goTo(id) {
+  if (id === currentScreen) return;
+  const cur = document.getElementById(currentScreen);
+  const next = document.getElementById(id);
+  if (!next) return;
+  navHistory.push(currentScreen);
+  if (cur) cur.classList.remove('active');
+  next.classList.add('active');
+  next.scrollTop = 0;
+  currentScreen = id;
+  onScreenEnter(id);
+}
+
+function goBack() {
+  if (!navHistory.length) return;
+  const prev = navHistory.pop();
+  const cur = document.getElementById(currentScreen);
+  const target = document.getElementById(prev);
+  if (!target) return;
+  if (cur) cur.classList.remove('active');
+  target.classList.add('active');
+  target.scrollTop = 0;
+  currentScreen = prev;
+  onScreenEnter(prev);
+}
+
+function setNav(el, id) {
+  goTo(id);
+}
+
+function onScreenEnter(id) {
+  if (id === 's-home') initHome();
+  if (id === 's-history') { renderHistory(); }
+  if (id === 's-verify') restoreVerifyDocStates();
+  if (id === 's-deposit') {
+    const sel = document.getElementById('dep-account');
+    if (sel) sel.value = 'fixed';
+    updateDepositBalance();
+    clearPresets();
+  }
+  if (id === 's-withdraw') { updateWithdrawBalance(); selectedCrypto=''; refreshCryptoUI(); }
+  if (id === 's-transfer') updateTransferBalance();
+  if (id === 's-billpay') updateBillBalance();
+  if (id === 's-profile') populateProfile();
+  if (id === 's-editprofile') populateEditProfile();
+  if (id === 's-card') initVCard();
+}
+
+// ============================================================
+// LOADING & SESSION RESTORE
+// ============================================================
+window.addEventListener('load', () => {
+  const savedId = DB.getSession();
+  if (savedId) {
+    const user = DB.getUser(savedId);
+    if (user) {
+      currentUser = user;
+      // Show PIN lock after splash instead of going straight to home
+      setTimeout(() => {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        currentScreen = 's-home'; // will be the destination after unlock
+        showPinLock();
+      }, 2200);
+      return;
+    }
+  }
+  setTimeout(() => goTo('s-welcome'), 2200);
+});
+
+// Track when app goes to background and comes back
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'hidden') {
+    if (currentUser) appWasHidden = true;
+  } else if (document.visibilityState === 'visible') {
+    if (currentUser && appWasHidden) {
+      appWasHidden = false;
+      showPinLock();
+    }
+  }
+});
+
+// Also catch iOS/Safari page show from bfcache
+window.addEventListener('pageshow', (e) => {
+  if (e.persisted && currentUser) {
+    showPinLock();
+  }
+});
+
+// ============================================================
+// PIN LOCK
+// ============================================================
+function showPinLock() {
+  pinLockEntry = '';
+  updatePinLockDots();
+  const overlay = document.getElementById('pin-lock-overlay');
+  const errEl   = document.getElementById('pin-lock-err');
+  const subEl   = document.getElementById('pin-lock-sub');
+  if (subEl && currentUser) subEl.textContent = 'Welcome back, ' + currentUser.name.split(' ')[0] + '.';
+  if (errEl) errEl.classList.remove('show');
+  if (overlay) overlay.classList.add('visible');
+}
+
+function hidePinLock() {
+  const overlay = document.getElementById('pin-lock-overlay');
+  if (overlay) overlay.classList.remove('visible');
+}
+
+function pinKeyPress(digit) {
+  if (pinLockEntry.length >= 4) return;
+  pinLockEntry += digit;
+  updatePinLockDots();
+  if (pinLockEntry.length === 4) {
+    setTimeout(verifyPinLock, 120); // slight delay so last dot renders
+  }
+}
+
+function pinKeyDelete() {
+  if (!pinLockEntry.length) return;
+  pinLockEntry = pinLockEntry.slice(0, -1);
+  updatePinLockDots();
+}
+
+function updatePinLockDots() {
+  for (let i = 0; i < 4; i++) {
+    const d = document.getElementById('pld' + i);
+    if (d) d.classList.toggle('filled', i < pinLockEntry.length);
+  }
+}
+
+function verifyPinLock() {
+  if (!currentUser) { hidePinLock(); return; }
+  // Reload user from DB in case it was updated
+  const freshUser = DB.getUser(currentUser.id);
+  if (!freshUser) { hidePinLock(); return; }
+  currentUser = freshUser;
+
+  if (pinLockEntry === currentUser.pin) {
+    hidePinLock();
+    // Navigate to home (or last active screen)
+    navHistory = [];
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    currentScreen = 's-home';
+    const homeEl = document.getElementById('s-home');
+    if (homeEl) homeEl.classList.add('active');
+    initHome();
+  } else {
+    // Wrong PIN — shake dots and show error
+    const dotsEl = document.getElementById('pin-lock-dots');
+    const errEl  = document.getElementById('pin-lock-err');
+    if (dotsEl) {
+      dotsEl.classList.remove('shake');
+      void dotsEl.offsetWidth; // reflow to restart animation
+      dotsEl.classList.add('shake');
+    }
+    if (errEl) errEl.classList.add('show');
+    pinLockEntry = '';
+    setTimeout(updatePinLockDots, 400);
+  }
+}
+
+function pinLockSignOut() {
+  hidePinLock();
+  currentUser = null;
+  DB.clearSession();
+  navHistory = [];
+  balanceVisible = true; cardFrozen = false; cardRevealed = false;
+  activeCardTab = 'savings'; termsChecked = false; regData = {};
+  selectedCrypto = ''; pendingEditPhoto = null; appWasHidden = false;
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  currentScreen = 's-welcome';
+  const welcome = document.getElementById('s-welcome');
+  if (welcome) welcome.classList.add('active');
+}
+
+// ============================================================
+// AUTH — SIGN IN
+// ============================================================
+function doSignIn() {
+  const identifier = (document.getElementById('si-identifier')?.value || '').trim();
+  const password = document.getElementById('si-pass')?.value || '';
+
+  if (!identifier) { showSigninErr('Please enter your email or phone number'); return; }
+  if (!password) { showSigninErr('Please enter your password'); return; }
+
+  const looksLikeEmail = identifier.includes('@');
+
+  // Format check for email
+  if (looksLikeEmail && !isValidEmail(identifier)) {
+    showSigninErr('The email address format is invalid. Please check and try again.');
+    return;
+  }
+
+  const users = DB.getUsers();
+  const normalizedId = identifier.toLowerCase();
+
+  const user = users.find(u =>
+    u.email.toLowerCase() === normalizedId ||
+    u.phone.replace(/[\s\-\(\)]/g,'') === identifier.replace(/[\s\-\(\)]/g,'')
+  );
+
+  if (!user) {
+    if (looksLikeEmail) {
+      showSigninErr('No account found with this email address. Please register or check your email.');
+    } else {
+      showSigninErr('No account found with this phone number. Please register or check your number.');
+    }
+    return;
+  }
+
+  if (user.password !== password) {
+    showSigninErr('Incorrect password. Please try again.');
+    return;
+  }
+
+  currentUser = user;
+  DB.setSession(user.id);
+  clearSigninErr();
+  document.getElementById('si-identifier').value = '';
+  document.getElementById('si-pass').value = '';
+  showPageLoader(() => { navHistory = []; goTo('s-home'); });
+}
+
+function showSigninErr(msg) {
+  const el = document.getElementById('si-err');
+  if (el) { el.textContent = msg; el.classList.add('show'); }
+  showToast('❌ ' + msg.split('.')[0]);
+}
+function clearSigninErr() {
+  const el = document.getElementById('si-err');
+  if (el) el.classList.remove('show');
+}
+
+// ============================================================
+// AUTH — SIGN OUT
+// ============================================================
+function signOut() {
+  // Clear all state immediately
+  currentUser = null;
+  DB.clearSession();
+  navHistory = [];
+  balanceVisible = true; cardFrozen = false; cardRevealed = false;
+  activeCardTab = 'savings'; termsChecked = false; regData = {};
+  selectedCrypto = ''; pendingEditPhoto = null; appWasHidden = false;
+  // Reset deposit account selector
+  const depAcct = document.getElementById('dep-account');
+  if (depAcct) depAcct.value = 'fixed';
+  // Hide all screens, show welcome immediately
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  currentScreen = 's-welcome';
+  const welcome = document.getElementById('s-welcome');
+  if (welcome) welcome.classList.add('active');
+}
+
+// ============================================================
+// AUTH — RESET PASSWORD
+// ============================================================
+function sendReset() {
+  const email = (document.getElementById('reset-email')?.value || '').trim();
+  if (!email) { showToast('Please enter your email'); return; }
+  if (!isValidEmail(email)) { showToast('❌ Invalid email format'); return; }
+  const user = DB.getUsers().find(u => u.email.toLowerCase() === email.toLowerCase());
+  if (!user) { showToast('❌ No account found with this email'); return; }
+  showToast('📧 Reset link sent to ' + email);
+  setTimeout(() => goBack(), 1500);
+}
+
+// ============================================================
+// REGISTRATION — STEP VALIDATORS
+// ============================================================
+function step1Next() {
+  const name    = (document.getElementById('ca-name')?.value || '').trim();
+  const dob     = document.getElementById('ca-dob')?.value || '';
+  const gender  = document.getElementById('ca-gender')?.value || '';
+  const country = document.getElementById('ca-country')?.value || '';
+  const state   = (document.getElementById('ca-state')?.value || '').trim();
+  const city    = (document.getElementById('ca-city')?.value || '').trim();
+  const address = (document.getElementById('ca-addr')?.value || '').trim();
+  const zip     = (document.getElementById('ca-zip')?.value || '').trim();
+  if (!name)    { showToast('Please enter your full name'); return; }
+  if (!dob)     { showToast('Please enter your date of birth'); return; }
+  if (!gender)  { showToast('Please select your gender'); return; }
+  if (!country) { showToast('Please select your country'); return; }
+  if (!state)   { showToast('Please enter your state / province'); return; }
+  if (!city)    { showToast('Please enter your city'); return; }
+  if (!address) { showToast('Please enter your street address'); return; }
+  if (!zip)     { showToast('Please enter your ZIP / postal code'); return; }
+  regData.name    = name;
+  regData.dob     = dob;
+  regData.gender  = gender;
+  regData.country = country;
+  regData.state   = state;
+  regData.city    = city;
+  regData.address = address;
+  regData.zip     = zip;
+  goTo('s-create-2');
+}
+
+function step2Next() {
+  const email  = (document.getElementById('ca-email')?.value || '').trim().toLowerCase();
+  const phone  = (document.getElementById('ca-phone')?.value || '').trim();
+  const occ    = (document.getElementById('ca-occ')?.value || '').trim();
+  const income = document.getElementById('ca-income')?.value || '';
+
+  // Clear previous errors
+  document.getElementById('ca-email-err').classList.remove('show');
+  document.getElementById('ca-phone-err').classList.remove('show');
+
+  if (!email)  { showToast('Please enter your email'); return; }
+  if (!isValidEmail(email)) { showRegErr('ca-email-err','Invalid email format. Please enter a valid email address.'); return; }
+  if (!phone)  { showToast('Please enter your phone number'); return; }
+  if (!occ)    { showToast('Please enter your occupation'); return; }
+  if (!income) { showToast('Please select your annual income'); return; }
+
+  const users = DB.getUsers();
+  if (users.find(u => u.email.toLowerCase() === email)) {
+    showRegErr('ca-email-err', 'This email address is already registered. Please use a different email or sign in.');
+    return;
+  }
+  const cleanPhone = phone.replace(/[\s\-\(\)]/g,'');
+  if (users.find(u => u.phone.replace(/[\s\-\(\)]/g,'') === cleanPhone)) {
+    showRegErr('ca-phone-err', 'This phone number is already registered. Please use a different number or sign in.');
+    return;
+  }
+
+  regData.email       = email;
+  regData.phone       = phone;
+  regData.occupation  = occ;
+  regData.annualIncome = income;
+  goTo('s-create-3');
+}
+
+function step3Next() {
+  const pass  = document.getElementById('ca-pass')?.value || '';
+  const cpass = document.getElementById('ca-cpass')?.value || '';
+  const pin   = document.getElementById('ca-pin')?.value || '';
+  if (pass.length < 8)              { showToast('Password must be at least 8 characters'); return; }
+  if (pass !== cpass)               { showToast('Passwords do not match'); return; }
+  if (!/^\d{4}$/.test(pin))         { showToast('PIN must be exactly 4 digits'); return; }
+  regData.password = pass;
+  regData.pin      = pin;
+  goTo('s-create-4');
+}
+
+function showRegErr(elId, msg) {
+  const el = document.getElementById(elId);
+  if (el) { el.textContent = msg; el.classList.add('show'); }
+  showToast('❌ ' + msg.split('.')[0]);
+}
+
+function finalCreateAccount() {
+  if (!termsChecked) { showToast('Please agree to the Terms & Conditions'); return; }
+  if (!regData.name || !regData.email || !regData.password) { showToast('Please complete all steps first'); return; }
+
+  const newUser = {
+    id:                   genId(),
+    name:                 regData.name,
+    email:                regData.email,
+    phone:                regData.phone,
+    password:             regData.password,
+    pin:                  regData.pin,
+    dob:                  regData.dob,
+    gender:               regData.gender,
+    country:              regData.country,
+    state:                regData.state,
+    city:                 regData.city,
+    address:              regData.address || '',
+    zip:                  regData.zip || '',
+    occupation:           regData.occupation,
+    annualIncome:         regData.annualIncome,
+    profilePhoto:         regData.profilePhoto || null,
+    savingsAccountNumber: genAcctNum(),
+    fixedAccountNumber:   genAcctNum(),
+    savingsBalance:       0,
+    fixedBalance:         0,
+    transactions:         []
+  };
+
+  const users = DB.getUsers();
+  users.push(newUser);
+  DB.saveUsers(users);
+
+  currentUser = newUser;
+  DB.setSession(newUser.id);
+
+  // Reset reg state
+  regData = {};
+  termsChecked = false;
+  const cb = document.getElementById('terms-cb');
+  if (cb) { cb.classList.remove('checked'); cb.innerHTML = ''; }
+
+  showPageLoader(() => {
+    navHistory = [];
+    goTo('s-home');
+    showToast('🎉 Account created! Welcome, ' + newUser.name.split(' ')[0] + '!');
+  });
+}
+
+function toggleTerms() {
+  termsChecked = !termsChecked;
+  const cb = document.getElementById('terms-cb');
+  if (cb) {
+    cb.classList.toggle('checked', termsChecked);
+    cb.innerHTML = termsChecked
+      ? '<svg width="14" height="14" fill="none" stroke="white" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>'
+      : '';
+  }
+}
+
+function populateReview() {
+  const set = (id, val) => { const el = document.getElementById(id); if(el) el.textContent = val||'—'; };
+  set('rv-name', regData.name);
+  set('rv-dob', regData.dob);
+  set('rv-gender', regData.gender);
+  set('rv-country', regData.country);
+  set('rv-location', [regData.city, regData.state].filter(Boolean).join(', '));
+  set('rv-email', regData.email);
+  set('rv-phone', regData.phone);
+  set('rv-occ', regData.occupation);
+  set('rv-income', regData.annualIncome);
+  // initials
+  const initEl = document.getElementById('rv-initials');
+  if (initEl) initEl.textContent = getInitials(regData.name);
+  // photo
+  const photoEl = document.getElementById('rv-photo');
+  if (photoEl && regData.profilePhoto) {
+    photoEl.innerHTML = `<img src="${regData.profilePhoto}" style="width:56px;height:56px;object-fit:cover;border-radius:50%;">`;
+  }
+}
+
+// ============================================================
+// PHOTO RESIZE UTILITY
+// ============================================================
+function resizeImage(file, maxW, maxH, callback) {
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      let w = img.width, h = img.height;
+      const ratio = Math.min(maxW/w, maxH/h);
+      if (ratio < 1) { w = Math.round(w*ratio); h = Math.round(h*ratio); }
+      canvas.width = w; canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      callback(canvas.toDataURL('image/jpeg', 0.85));
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function previewRegPhoto(input) {
+  if (!input.files?.[0]) return;
+  resizeImage(input.files[0], 300, 300, (dataUrl) => {
+    regData.profilePhoto = dataUrl;
+    const prev = document.getElementById('photo-preview-reg');
+    const ph   = document.getElementById('photo-placeholder-reg');
+    const area = document.getElementById('photo-area');
+    if (prev) { prev.src = dataUrl; prev.style.display = 'block'; }
+    if (ph)   ph.style.display = 'none';
+    if (area) area.classList.add('has-photo');
+  });
+}
+
+function previewEditPhoto(input) {
+  if (!input.files?.[0]) return;
+  resizeImage(input.files[0], 300, 300, (dataUrl) => {
+    pendingEditPhoto = dataUrl;
+    const img = document.getElementById('ep-photo-preview');
+    const ini = document.getElementById('ep-photo-initials');
+    if (img) { img.src = dataUrl; img.style.display = 'block'; }
+    if (ini) ini.style.display = 'none';
+    showToast('Photo selected — tap Save to apply');
+  });
+}
+
+function updateProfilePhoto(input) {
+  if (!input.files?.[0] || !currentUser) return;
+  resizeImage(input.files[0], 300, 300, (dataUrl) => {
+    currentUser.profilePhoto = dataUrl;
+    DB.updateUser(currentUser);
+    renderProfilePhoto();
+    showToast('✅ Profile photo updated!');
+  });
+}
+
+// ============================================================
+// HOME
+// ============================================================
+function initHome() {
+  if (!currentUser) return;
+  const h = new Date().getHours();
+  const greet = h < 12 ? 'Good Morning' : h < 18 ? 'Good Afternoon' : 'Good Evening';
+  const g = document.getElementById('home-greeting');
+  const u = document.getElementById('home-username');
+  if (g) g.textContent = greet;
+  if (u) u.textContent = currentUser.name.split(' ')[0] + ' 👋';
+
+  // Account numbers in card
+  const sn = document.getElementById('home-savings-acct-display');
+  const fn = document.getElementById('home-fixed-acct-display');
+  if (sn) sn.textContent = fmtAcctNum(currentUser.savingsAccountNumber);
+  if (fn) fn.textContent = fmtAcctNum(currentUser.fixedAccountNumber);
+
+  refreshCardDisplay();
+  // Sync tab highlight with current activeCardTab — scoped to account card
+  const cardTabsBox = document.querySelector('.account-card .card-tabs');
+  if (cardTabsBox) {
+    cardTabsBox.querySelectorAll('.card-tab').forEach(t => {
+      const isSav = t.id === 'tab-savings';
+      const isFix = t.id === 'tab-fixed';
+      if (isSav) t.classList.toggle('active', activeCardTab === 'savings');
+      if (isFix) t.classList.toggle('active', activeCardTab === 'fixed');
+    });
+  }
+  renderHomeTransactions();
+}
+
+function fmtAcctNum(n) {
+  if (!n) return '—';
+  return n.replace(/(\d{4})(\d{3})(\d{3})/, '$1 $2 $3');
+}
+
+function refreshCardDisplay() {
+  if (!currentUser) return;
+  const isSavings = activeCardTab === 'savings';
+  const bal = isSavings ? currentUser.savingsBalance : currentUser.fixedBalance;
+  const acct = isSavings ? currentUser.savingsAccountNumber : currentUser.fixedAccountNumber;
+  const label = isSavings ? 'SAVINGS ACCOUNT BALANCE' : 'FIXED ACCOUNT BALANCE';
+
+  const balEl  = document.getElementById('balance-display');
+  const acctEl = document.getElementById('card-acct-num-display');
+  const lblEl  = document.getElementById('card-acct-type-label');
+  if (balEl)  balEl.textContent  = balanceVisible ? formatCurrency(bal) : '••••••••';
+  if (acctEl) acctEl.textContent = balanceVisible ? fmtAcctNum(acct) : '•••• •••• ••••';
+  if (lblEl)  lblEl.textContent  = label;
+}
+
+function setCardTab(type, el) {
+  activeCardTab = type;
+  // Scope to only the account card tabs, not any other .card-tab elements elsewhere
+  const cardTabsContainer = document.querySelector('.account-card .card-tabs');
+  if (cardTabsContainer) {
+    cardTabsContainer.querySelectorAll('.card-tab').forEach(t => t.classList.remove('active'));
+  }
+  if (el) el.classList.add('active');
+  refreshCardDisplay();
+}
+
+function toggleBalance() {
+  balanceVisible = !balanceVisible;
+  refreshCardDisplay();
+}
+
+function copyActiveAcctNum() {
+  if (!currentUser) return;
+  const num = activeCardTab === 'savings'
+    ? currentUser.savingsAccountNumber
+    : currentUser.fixedAccountNumber;
+  copyText(num, (activeCardTab === 'savings' ? 'Savings' : 'Fixed') + ' account number copied!');
+}
+
+// ============================================================
+// TRANSACTIONS RENDERING
+// ============================================================
+const TX_CFG = {
+  'Deposit':      { icon:'💰', bg:'#E8FBF4' },
+  'Withdrawal':   { icon:'💸', bg:'#FEF0EE' },
+  'Transfer':     { icon:'↔️', bg:'#EEF4FF' },
+  'Bill Payment': { icon:'📄', bg:'#F3EEFF' }
+};
+
+function txHTML(tx) {
+  const cfg = TX_CFG[tx.type] || { icon:'💳', bg:'#EEF4FF' };
+  const isCredit = tx.type === 'Deposit';
+  const acctLabel = tx.accountType === 'savings' ? 'Savings' : 'Fixed';
+  let sub = acctLabel;
+  if (tx.type === 'Withdrawal' && tx.cryptoNetwork) sub += ` · ${tx.cryptoNetwork}`;
+  if (tx.type === 'Transfer'   && tx.recipientName) sub += ` → ${tx.recipientName}`;
+  if (tx.type === 'Bill Payment' && tx.billCategory) sub += ` · ${tx.billCategory}`;
+  return `<div class="trans-item">
+    <div class="trans-icon" style="background:${cfg.bg}">${cfg.icon}</div>
+    <div class="trans-info">
+      <div class="trans-name">${tx.type}</div>
+      <div class="trans-sub">${sub}</div>
+      <div class="trans-date">${formatDateTime(tx.timestamp)}</div>
+    </div>
+    <div class="${isCredit ? 'trans-amount-pos' : 'trans-amount-neg'}">${isCredit ? '+' : '-'}${formatCurrency(tx.amount)}</div>
+  </div>`;
+}
+
+function renderHomeTransactions() {
+  const el = document.getElementById('home-transactions');
+  if (!el || !currentUser) return;
+  const txs = (currentUser.transactions || []).slice(-5).reverse();
+  if (!txs.length) {
+    el.innerHTML = `<div class="trans-empty"><div class="trans-empty-icon">📋</div><p>No transactions yet</p><small>Make your first deposit to get started</small></div>`;
+    return;
+  }
+  el.innerHTML = txs.map(txHTML).join('');
+}
+
+function renderHistory(filter='', typeFilter='') {
+  const el = document.getElementById('history-list');
+  const cntEl = document.getElementById('tx-count');
+  if (!el || !currentUser) return;
+  let txs = [...(currentUser.transactions || [])].reverse();
+  if (typeFilter) txs = txs.filter(t => t.type === typeFilter);
+  if (filter) {
+    const q = filter.toLowerCase();
+    txs = txs.filter(t =>
+      t.type.toLowerCase().includes(q) ||
+      (t.recipientName||'').toLowerCase().includes(q) ||
+      (t.billCategory||'').toLowerCase().includes(q) ||
+      (t.cryptoNetwork||'').toLowerCase().includes(q)
+    );
+  }
+  if (cntEl) cntEl.textContent = `${(currentUser.transactions||[]).length} total transaction${(currentUser.transactions||[]).length!==1?'s':''}`;
+  if (!txs.length) {
+    el.innerHTML = `<div class="trans-empty"><div class="trans-empty-icon">📋</div><p>No transactions found</p></div>`;
+    return;
+  }
+  el.innerHTML = txs.map(txHTML).join('');
+}
+
+function filterTx(q) { renderHistory(q, ''); }
+function filterTxType(t) { renderHistory('', t); }
+
+function renderStatement() {
+  if (!currentUser) return;
+  const acctFilter = document.getElementById('stmt-acct-filter')?.value || 'all';
+  let txs = currentUser.transactions || [];
+  if (acctFilter !== 'all') txs = txs.filter(t => t.accountType === acctFilter);
+
+  const totalIn  = txs.filter(t => t.type === 'Deposit').reduce((s,t) => s+t.amount, 0);
+  const totalOut = txs.filter(t => t.type !== 'Deposit').reduce((s,t) => s+t.amount, 0);
+
+  const balToShow = acctFilter === 'savings' ? currentUser.savingsBalance
+                  : acctFilter === 'fixed'   ? currentUser.fixedBalance
+                  : currentUser.savingsBalance + currentUser.fixedBalance;
+
+  const inEl  = document.getElementById('stmt-in');
+  const outEl = document.getElementById('stmt-out');
+  const balEl = document.getElementById('stmt-balance');
+  if (inEl)  inEl.textContent  = formatCurrency(totalIn);
+  if (outEl) outEl.textContent = formatCurrency(totalOut);
+  if (balEl) balEl.textContent = formatCurrency(balToShow);
+
+  const listEl = document.getElementById('statement-list');
+  if (!listEl) return;
+  if (!txs.length) {
+    listEl.innerHTML = `<div class="trans-empty"><div class="trans-empty-icon">📄</div><p>No transactions for this period</p></div>`;
+    return;
+  }
+  listEl.innerHTML = [...txs].reverse().map(txHTML).join('');
+}
+
+// ============================================================
+// DEPOSIT
+// ============================================================
+function updateDepositBalance() {
+  if (!currentUser) return;
+  const acct = document.getElementById('dep-account')?.value || 'savings';
+  const bal = acct === 'savings' ? currentUser.savingsBalance : currentUser.fixedBalance;
+  const el = document.getElementById('dep-avail');
+  if (el) el.textContent = formatCurrency(bal);
+  // Refresh account details card
+  const acctNum = acct === 'savings' ? currentUser.savingsAccountNumber : currentUser.fixedAccountNumber;
+  const numEl  = document.getElementById('dep-detail-acct-num');
+  const nameEl = document.getElementById('dep-detail-name');
+  if (numEl)  numEl.textContent  = fmtAcctNum(acctNum);
+  if (nameEl) nameEl.textContent = currentUser.name;
+}
+
+function copyDepositDetail(field) {
+  if (!currentUser) return;
+  const acct = document.getElementById('dep-account')?.value || 'savings';
+  if (field === 'acct') {
+    const num = acct === 'savings' ? currentUser.savingsAccountNumber : currentUser.fixedAccountNumber;
+    copyText(num, 'Account number copied!');
+  } else if (field === 'bank') {
+    copyText('Global CU', 'Bank name copied!');
+  } else if (field === 'name') {
+    copyText(currentUser.name, 'Account name copied!');
+  }
+}
+
+function clearPresets() {
+  document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+}
+
+function setPreset(id, val, btn) {
+  const el = document.getElementById(id);
+  if (el) el.value = val;
+  btn.parentElement.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function confirmDeposit() {
+  if (!currentUser) return;
+  const acct   = document.getElementById('dep-account')?.value || 'savings';
+  const amount = parseFloat(document.getElementById('dep-amount')?.value) || 0;
+  const note   = document.getElementById('dep-note')?.value || '';
+  if (amount <= 0) { showToast('Please enter a valid amount'); return; }
+
+  const user = DB.getUser(currentUser.id);
+  if (acct === 'savings') user.savingsBalance = +(user.savingsBalance + amount).toFixed(2);
+  else                    user.fixedBalance   = +(user.fixedBalance   + amount).toFixed(2);
+
+  user.transactions.push({ id:genId(), type:'Deposit', accountType:acct, amount, timestamp:Date.now(), note });
+  DB.updateUser(user);
+  currentUser = user;
+
+  document.getElementById('dep-amount').value = '';
+  clearPresets();
+  showToast(`✅ ${formatCurrency(amount)} deposited to ${acct === 'savings' ? 'Savings' : 'Fixed'} account`);
+  showPageLoader(() => goTo('s-home'));
+}
+
+// ============================================================
+// WITHDRAW (with crypto)
+// ============================================================
+function updateWithdrawBalance() {
+  if (!currentUser) return;
+  const acct = document.getElementById('wd-account')?.value || 'savings';
+  const bal = acct === 'savings' ? currentUser.savingsBalance : currentUser.fixedBalance;
+  const el = document.getElementById('wd-avail');
+  if (el) el.textContent = formatCurrency(bal);
+}
+
+function selectCrypto(network) {
+  selectedCrypto = network;
+  document.getElementById('wd-network').value = network;
+  refreshCryptoUI();
+}
+
+function refreshCryptoUI() {
+  ['BTC','ETH','USDT'].forEach(n => {
+    const el = document.getElementById('crypto-' + n.toLowerCase());
+    if (el) el.classList.toggle('active', selectedCrypto === n);
+  });
+}
+
+function confirmWithdraw() {
+  if (!currentUser) return;
+  const acct   = document.getElementById('wd-account')?.value || 'savings';
+  const amount = parseFloat(document.getElementById('wd-amount')?.value) || 0;
+  const network = selectedCrypto;
+  const wallet  = (document.getElementById('wd-wallet')?.value || '').trim();
+
+  if (amount <= 0)  { showToast('Please enter a valid amount'); return; }
+  if (!network)     { showToast('Please select a crypto network'); return; }
+  if (!wallet)      { showToast('Please enter your wallet address'); return; }
+  if (wallet.length < 10) { showToast('Please enter a valid wallet address'); return; }
+
+  const user = DB.getUser(currentUser.id);
+  const avail = acct === 'savings' ? user.savingsBalance : user.fixedBalance;
+  if (amount > avail) { showToast(`Insufficient funds. Available: ${formatCurrency(avail)}`); return; }
+
+  if (acct === 'savings') user.savingsBalance = +(user.savingsBalance - amount).toFixed(2);
+  else                    user.fixedBalance   = +(user.fixedBalance   - amount).toFixed(2);
+
+  user.transactions.push({ id:genId(), type:'Withdrawal', accountType:acct, amount, timestamp:Date.now(), cryptoNetwork:network, walletAddress:wallet });
+  DB.updateUser(user);
+  currentUser = user;
+
+  document.getElementById('wd-amount').value = '';
+  document.getElementById('wd-wallet').value = '';
+  selectedCrypto = '';
+  refreshCryptoUI();
+  showToast(`✅ Withdrawal of ${formatCurrency(amount)} submitted via ${network}`);
+  showPageLoader(() => goTo('s-home'));
+}
+
+// ============================================================
+// TRANSFER
+// ============================================================
+function updateTransferBalance() {
+  if (!currentUser) return;
+  const acct = document.getElementById('tr-account')?.value || 'savings';
+  const bal = acct === 'savings' ? currentUser.savingsBalance : currentUser.fixedBalance;
+  const el = document.getElementById('tr-avail');
+  if (el) el.textContent = formatCurrency(bal);
+}
+
+function confirmTransfer() {
+  if (!currentUser) return;
+  const acct    = document.getElementById('tr-account')?.value || 'savings';
+  const recipAcct = (document.getElementById('tr-acct')?.value || '').trim();
+  const recipName = (document.getElementById('tr-name')?.value || '').trim();
+  const amount  = parseFloat(document.getElementById('tr-amount')?.value) || 0;
+  const note    = document.getElementById('tr-note')?.value || '';
+
+  if (!recipAcct) { showToast('Please enter recipient account number'); return; }
+  if (!recipName) { showToast('Please enter recipient name'); return; }
+  if (amount <= 0){ showToast('Please enter a valid amount'); return; }
+
+  const user = DB.getUser(currentUser.id);
+  const avail = acct === 'savings' ? user.savingsBalance : user.fixedBalance;
+  if (amount > avail) { showToast(`Insufficient funds. Available: ${formatCurrency(avail)}`); return; }
+
+  if (acct === 'savings') user.savingsBalance = +(user.savingsBalance - amount).toFixed(2);
+  else                    user.fixedBalance   = +(user.fixedBalance   - amount).toFixed(2);
+
+  // Check if recipient is an internal user and credit them
+  const allUsers = DB.getUsers();
+  const recipient = allUsers.find(u =>
+    u.savingsAccountNumber === recipAcct || u.fixedAccountNumber === recipAcct
+  );
+  if (recipient && recipient.id !== currentUser.id) {
+    const isRecipSavings = recipient.savingsAccountNumber === recipAcct;
+    if (isRecipSavings) recipient.savingsBalance = +(recipient.savingsBalance + amount).toFixed(2);
+    else                recipient.fixedBalance   = +(recipient.fixedBalance   + amount).toFixed(2);
+    recipient.transactions.push({ id:genId(), type:'Deposit', accountType: isRecipSavings ? 'savings' : 'fixed', amount, timestamp:Date.now(), note:`From ${currentUser.name}` });
+    const idx = allUsers.findIndex(u => u.id === recipient.id);
+    allUsers[idx] = recipient;
+  }
+
+  user.transactions.push({ id:genId(), type:'Transfer', accountType:acct, amount, timestamp:Date.now(), recipientAccountNumber:recipAcct, recipientName:recipName, note });
+  const userIdx = allUsers.findIndex(u => u.id === user.id);
+  allUsers[userIdx] = user;
+  DB.saveUsers(allUsers);
+  currentUser = user;
+
+  ['tr-acct','tr-name','tr-amount','tr-note'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.value = '';
+  });
+  showToast(`✅ ${formatCurrency(amount)} sent to ${recipName}`);
+  showPageLoader(() => goTo('s-home'));
+}
+
+// ============================================================
+// BILL PAYMENT
+// ============================================================
+function showBillForm(category) {
+  const el = document.getElementById('bill-screen-title');
+  if (el) el.textContent = 'Pay ' + category;
+  // store category
+  window._billCategory = category;
+  goTo('s-billpay');
+}
+
+function updateBillBalance() {
+  if (!currentUser) return;
+  const acct = document.getElementById('bill-account')?.value || 'savings';
+  const bal = acct === 'savings' ? currentUser.savingsBalance : currentUser.fixedBalance;
+  const el = document.getElementById('bill-avail');
+  if (el) el.textContent = formatCurrency(bal);
+}
+
+function confirmBillPay() {
+  if (!currentUser) return;
+  const acct   = document.getElementById('bill-account')?.value || 'savings';
+  const custNum = (document.getElementById('bill-cust-num')?.value || '').trim();
+  const amount  = parseFloat(document.getElementById('bill-amount')?.value) || 0;
+
+  if (!custNum) { showToast('Please enter the billing account number'); return; }
+  if (amount <= 0){ showToast('Please enter a valid amount'); return; }
+
+  const user = DB.getUser(currentUser.id);
+  const avail = acct === 'savings' ? user.savingsBalance : user.fixedBalance;
+  if (amount > avail) { showToast(`Insufficient funds. Available: ${formatCurrency(avail)}`); return; }
+
+  if (acct === 'savings') user.savingsBalance = +(user.savingsBalance - amount).toFixed(2);
+  else                    user.fixedBalance   = +(user.fixedBalance   - amount).toFixed(2);
+
+  user.transactions.push({ id:genId(), type:'Bill Payment', accountType:acct, amount, timestamp:Date.now(), billCategory: window._billCategory || 'Bill', note: custNum });
+  DB.updateUser(user);
+  currentUser = user;
+
+  ['bill-cust-num','bill-amount','bill-note'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.value = '';
+  });
+  showToast(`✅ Bill payment of ${formatCurrency(amount)} confirmed`);
+  showPageLoader(() => goTo('s-home'));
+}
+
+// ============================================================
+// PROFILE
+// ============================================================
+function populateProfile() {
+  if (!currentUser) return;
+  const set = (id, val) => { const el = document.getElementById(id); if(el) el.textContent = val||'—'; };
+  set('profile-name-el', currentUser.name);
+  set('profile-email-sub', currentUser.email);
+  set('prof-email', currentUser.email);
+  set('prof-phone', currentUser.phone);
+  set('prof-location', [currentUser.city, currentUser.state, currentUser.country].filter(Boolean).join(', '));
+  set('prof-occ', currentUser.occupation || '—');
+  set('prof-savings-acct', fmtAcctNum(currentUser.savingsAccountNumber));
+  set('prof-fixed-acct',   fmtAcctNum(currentUser.fixedAccountNumber));
+  renderProfilePhoto();
+}
+
+function renderProfilePhoto() {
+  if (!currentUser) return;
+  const photoEl = document.getElementById('profile-photo-el');
+  const initEl  = document.getElementById('profile-avatar-initials');
+  if (!photoEl) return;
+  if (currentUser.profilePhoto) {
+    // Remove old img if any
+    const oldImg = photoEl.querySelector('img.profile-photo-img');
+    if (oldImg) oldImg.remove();
+    const img = document.createElement('img');
+    img.src = currentUser.profilePhoto;
+    img.className = 'profile-photo-img';
+    img.style.cssText = 'width:100%;height:100%;object-fit:cover;position:absolute;inset:0;border-radius:50%;';
+    photoEl.prepend(img);
+    if (initEl) initEl.style.display = 'none';
+  } else {
+    if (initEl) { initEl.style.display = ''; initEl.textContent = getInitials(currentUser.name); }
+  }
+}
+
+function populateEditProfile() {
+  if (!currentUser) return;
+  const setVal = (id, val) => { const el = document.getElementById(id); if(el) el.value = val||''; };
+  setVal('ep-name', currentUser.name);
+  setVal('ep-email', currentUser.email);
+  setVal('ep-phone', currentUser.phone);
+  setVal('ep-occ', currentUser.occupation);
+  setVal('ep-city', currentUser.city);
+  document.getElementById('ep-pin').value = '';
+  pendingEditPhoto = null;
+
+  // Photo circle
+  const circle = document.getElementById('ep-photo-circle');
+  const img    = document.getElementById('ep-photo-preview');
+  const ini    = document.getElementById('ep-photo-initials');
+  if (currentUser.profilePhoto && img && circle) {
+    img.src = currentUser.profilePhoto; img.style.display = 'block';
+    if (ini) ini.style.display = 'none';
+  } else {
+    if (img) img.style.display = 'none';
+    if (ini) { ini.style.display = ''; ini.textContent = getInitials(currentUser.name); }
+  }
+}
+
+function saveProfile() {
+  if (!currentUser) return;
+  const name  = (document.getElementById('ep-name')?.value || '').trim();
+  const email = (document.getElementById('ep-email')?.value || '').trim().toLowerCase();
+  const phone = (document.getElementById('ep-phone')?.value || '').trim();
+  const occ   = (document.getElementById('ep-occ')?.value || '').trim();
+  const city  = (document.getElementById('ep-city')?.value || '').trim();
+  const pin   = document.getElementById('ep-pin')?.value || '';
+
+  if (!name)  { showToast('Name cannot be empty'); return; }
+  if (!email || !isValidEmail(email)) { showToast('Please enter a valid email'); return; }
+
+  // Check email uniqueness (excluding current user)
+  const users = DB.getUsers();
+  if (users.find(u => u.id !== currentUser.id && u.email.toLowerCase() === email)) {
+    showToast('❌ This email is already used by another account'); return;
+  }
+
+  const user = DB.getUser(currentUser.id);
+  user.name       = name;
+  user.email      = email;
+  user.phone      = phone || user.phone;
+  user.occupation = occ || user.occupation;
+  user.city       = city || user.city;
+  if (pin && /^\d{4}$/.test(pin)) user.pin = pin;
+  if (pendingEditPhoto) user.profilePhoto = pendingEditPhoto;
+
+  DB.updateUser(user);
+  currentUser = user;
+  pendingEditPhoto = null;
+
+  showToast('✅ Profile updated successfully!');
+  setTimeout(() => goBack(), 900);
+}
+
+// ============================================================
+// VIRTUAL CARD
+// ============================================================
+function initVCard() {
+  if (!currentUser) return;
+  const holderEl = document.getElementById('vcard-holder');
+  const numEl    = document.getElementById('vcard-number');
+  const cvvEl    = document.getElementById('vcard-cvv');
+  const linkedEl = document.getElementById('vcard-linked-acct');
+  if (holderEl) holderEl.textContent = currentUser.name.toUpperCase();
+  if (numEl)    numEl.textContent    = cardRevealed ? '4521 ' + currentUser.savingsAccountNumber.slice(0,4) + ' 3389 7721' : '•••• •••• •••• ••••';
+  if (cvvEl)    cvvEl.textContent    = cardRevealed ? '419' : '•••';
+  if (linkedEl) linkedEl.textContent = 'Savings ••••' + currentUser.savingsAccountNumber.slice(-4);
+}
+
+function toggleCardReveal() {
+  cardRevealed = !cardRevealed;
+  initVCard();
+  showToast(cardRevealed ? 'Card details revealed' : 'Card details hidden');
+}
+
+function copyVCardNumber() {
+  if (!currentUser) return;
+  const num = cardRevealed ? '4521 ' + currentUser.savingsAccountNumber.slice(0,4) + ' 3389 7721' : currentUser.savingsAccountNumber;
+  copyText(num, 'Card number copied!');
+}
+
+function freezeCard() {
+  cardFrozen = !cardFrozen;
+  const lbl    = document.getElementById('freeze-label');
+  const status = document.getElementById('card-status');
+  const card   = document.getElementById('virtual-card');
+  if (lbl)    lbl.textContent = cardFrozen ? 'Unfreeze' : 'Freeze';
+  if (status) status.innerHTML = cardFrozen
+    ? '<span style="color:var(--coral);">●</span> Frozen'
+    : '<span style="color:var(--green);">●</span> Active';
+  if (card)   card.style.filter = cardFrozen ? 'grayscale(0.65)' : '';
+  showToast(cardFrozen ? '❄️ Card frozen' : '✅ Card unfrozen');
+}
+
+// ============================================================
+// UI HELPERS
+// ============================================================
+function togglePass(id, btn) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.type = el.type === 'password' ? 'text' : 'password';
+  btn.textContent = el.type === 'password' ? '👁' : '🙈';
+}
+
+function updatePinDots(val) {
+  for (let i = 0; i < 4; i++) {
+    const d = document.getElementById('pd' + i);
+    if (d) d.classList.toggle('filled', i < val.length);
+  }
+}
+
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  if (!t) return;
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+function showPageLoader(cb) {
+  const loader = document.getElementById('page-loader');
+  if (loader) loader.classList.remove('hide');
+  setTimeout(() => {
+    if (loader) loader.classList.add('hide');
+    if (cb) cb();
+  }, 1000);
+}
+
+// ============================================================
+// VERIFICATION DOCUMENT UPLOAD
+// ============================================================
+function handleDocUpload(input, docKey, subId, statusId, btnId) {
+  if (!input.files || !input.files[0]) return;
+  const file = input.files[0];
+  const maxMB = 10;
+  if (file.size > maxMB * 1024 * 1024) {
+    showToast('❌ File too large. Max size is 10MB.');
+    input.value = '';
+    return;
+  }
+  const allowedTypes = ['image/jpeg','image/png','image/gif','image/webp','application/pdf'];
+  if (!allowedTypes.includes(file.type)) {
+    showToast('❌ Invalid file type. Use JPG, PNG or PDF.');
+    input.value = '';
+    return;
+  }
+
+  // Truncate long filenames for display
+  const maxLen = 22;
+  const displayName = file.name.length > maxLen ? file.name.slice(0, maxLen - 1) + '…' : file.name;
+
+  // Update UI to show uploaded state
+  const subEl    = document.getElementById(subId);
+  const statusEl = document.getElementById(statusId);
+  const btnEl    = document.getElementById(btnId);
+  const cardEl   = btnEl?.closest('.verify-card');
+
+  if (subEl)    subEl.style.display = 'none';
+  if (statusEl) {
+    statusEl.innerHTML = `<svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> ${displayName}`;
+    statusEl.style.display = 'flex';
+  }
+  if (btnEl) {
+    btnEl.classList.add('uploaded');
+    btnEl.innerHTML = `<svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Uploaded`;
+  }
+  if (cardEl) cardEl.classList.add('doc-uploaded');
+
+  // Persist filename in user data (not the binary — just the name for UI state)
+  if (currentUser) {
+    const user = DB.getUser(currentUser.id);
+    if (!user.verificationDocs) user.verificationDocs = {};
+    user.verificationDocs[docKey] = { name: file.name, uploadedAt: Date.now() };
+    DB.updateUser(user);
+    currentUser = user;
+  }
+
+  showToast(`✅ ${file.name.split('.')[0]} uploaded successfully`);
+}
+
+function restoreVerifyDocStates() {
+  if (!currentUser || !currentUser.verificationDocs) return;
+  const docs = currentUser.verificationDocs;
+  const map = [
+    { key:'id',       subId:'vdoc-id-sub',       statusId:'vdoc-id-status',       btnId:'vbtn-id'       },
+    { key:'passport', subId:'vdoc-passport-sub',  statusId:'vdoc-passport-status', btnId:'vbtn-passport' },
+    { key:'license',  subId:'vdoc-license-sub',   statusId:'vdoc-license-status',  btnId:'vbtn-license'  },
+  ];
+  map.forEach(({ key, subId, statusId, btnId }) => {
+    if (!docs[key]) return;
+    const maxLen = 22;
+    const name = docs[key].name;
+    const displayName = name.length > maxLen ? name.slice(0, maxLen - 1) + '…' : name;
+    const subEl    = document.getElementById(subId);
+    const statusEl = document.getElementById(statusId);
+    const btnEl    = document.getElementById(btnId);
+    const cardEl   = btnEl?.closest('.verify-card');
+    if (subEl)    subEl.style.display = 'none';
+    if (statusEl) {
+      statusEl.innerHTML = `<svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> ${displayName}`;
+      statusEl.style.display = 'flex';
+    }
+    if (btnEl) {
+      btnEl.classList.add('uploaded');
+      btnEl.innerHTML = `<svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Uploaded`;
+    }
+    if (cardEl) cardEl.classList.add('doc-uploaded');
+  });
+}
+
+// ============================================================
+// iOS / ANDROID RUNTIME COMPATIBILITY
+// ============================================================
+
+// 1. Stamp type="button" on every <button> that doesn't have an explicit type
+//    Prevents iOS Safari treating bare <button> as type="submit" which can
+//    trigger unexpected form submissions and page reloads.
+document.querySelectorAll('button:not([type])').forEach(b => b.setAttribute('type','button'));
+
+// 2. Prevent the elastic/bounce scroll on iOS at the document level.
+//    Individual scrollable containers use overscroll-behavior-y:contain in CSS.
+document.addEventListener('touchmove', function(e) {
+  if (e.target.closest('.screen-scroll, .form-body, .signin-inner, .profile-body, #pin-lock-overlay')) return;
+  if (e.touches.length > 1) return; // allow pinch
+  e.preventDefault();
+}, { passive: false });
+
+// 3. On Android, when the virtual keyboard opens it resizes the viewport.
+//    This keeps the .app container sized to the visual viewport (not layout viewport)
+//    so the bottom nav doesn't get pushed under the keyboard.
+if (window.visualViewport) {
+  window.visualViewport.addEventListener('resize', () => {
+    const app = document.getElementById('app');
+    if (!app) return;
+    // Only apply on mobile widths
+    if (window.innerWidth <= 430) {
+      app.style.height = window.visualViewport.height + 'px';
+    }
+  });
+  window.visualViewport.addEventListener('scroll', () => {
+    const app = document.getElementById('app');
+    if (!app || window.innerWidth > 430) return;
+    app.style.top = window.visualViewport.offsetTop + 'px';
+  });
+}
+document.addEventListener('click', e => {
+  const btn = e.target.closest('button, .action-item, .bill-card, .qa-card, .trans-item, .info-card.clickable, .menu-item, .card-tab, .crypto-btn');
+  if (!btn) return;
+  const ripple = document.createElement('span');
+  const rect   = btn.getBoundingClientRect();
+  ripple.style.cssText = `position:absolute;width:80px;height:80px;border-radius:50%;background:rgba(255,255,255,0.25);pointer-events:none;transform:scale(0);animation:rippleAnim 0.5s ease forwards;left:${e.clientX-rect.left-40}px;top:${e.clientY-rect.top-40}px;z-index:100;`;
+  if (getComputedStyle(btn).position === 'static') btn.style.position = 'relative';
+  btn.style.overflow = 'hidden';
+  btn.appendChild(ripple);
+  setTimeout(() => ripple.remove(), 500);
+});
+</script>
+</body>
+</html>
